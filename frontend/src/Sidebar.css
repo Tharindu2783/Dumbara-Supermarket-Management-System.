@@ -1,0 +1,84 @@
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    /* මෙහි 0.1 වෙනුවට 0.4 හෝ 0.6 ලබා දීමෙන් සුදු පැහැය වැඩි කළ හැක */
+    background: rgba(255, 255, 255, 0.4); 
+    backdrop-filter: blur(15px); /* Blur එක මදක් අඩු කළා පිරිසිදු පෙනුමකට */
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.3);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.sidebar-brand {
+    margin-bottom: 50px;
+    color: #09853c;
+    display: flex;
+    flex-direction: column; /* පේළි එක යට එක සිටීමට */
+    width: 100%;
+}
+
+.brand-name { 
+    font-size: 3rem; 
+    line-height: 1; 
+    margin: 0; 
+    text-align: left; /* Dumbara වම් පසට */
+}
+
+/* Super Market යන කොටස සඳහා පමණක් */
+.brand-sub { 
+    font-size: 1.3rem; 
+    margin: 0; 
+    font-weight: 700;
+    align-self: flex-end; /* මෙන්න මෙතනින් තමයි දකුණට තල්ලු කරන්නේ */
+    padding-right: 10px; /* දාරයටම යෑම වැළැක්වීමට */
+}
+
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+/* ඔබ එවූ image එකේ තිබුණු කොළ පැහැති Highlight එක */
+.nav-item.active {
+    background: #2ecc71;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+}
+
+.nav-item:hover:not(.active) {
+    background: rgba(46, 204, 113, 0.1);
+    transform: translateX(5px);
+}
+
+.sidebar-logout {
+    margin-top: auto;
+}
+
+.logout-link {
+    text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}

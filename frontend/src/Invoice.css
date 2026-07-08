@@ -1,0 +1,249 @@
+/* Invoice.css */
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fadeInRight {
+    animation: fadeInRight 0.2s ease-out forwards; 
+}
+
+/* Main Structure - Sidebar එක සමඟ ගැටීම වළක්වයි */
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+}
+
+.content-area {
+    flex: 1;
+    margin-left: 260px; /* Sidebar එකට ඇති නිවැරදි පරතරය */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: flex-start;
+    overflow-x: hidden;
+}
+
+/* Header Section */
+.top-row {
+    width: 95%; 
+    max-width: 1200px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    background: #ffffffaa;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
+/* Stats Cards Layout */
+.stats-container {
+    display: flex;
+    justify-content: space-between; 
+    gap: 20px;
+    margin-bottom: 30px;
+    width: 95%;
+    max-width: 1200px;
+}
+
+.glass-stat-card {
+    background: rgba(255, 255, 255, 0.8); 
+    backdrop-filter: blur(12px);
+    border-radius: 25px;
+    padding: 20px;
+    flex: 1;
+    min-height: 200px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.invoice-summary-box {
+    justify-content: flex-start; 
+    padding-top: 25px;
+}
+
+.glass-stat-card h3 {
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+/* Big Numbers inside Cards */
+.total-number-special {
+    color: #2ecc71; /* Green color from image */
+    font-size: 6rem; 
+    font-weight: 800;
+    margin: auto 0;    
+    line-height: 1;
+}
+
+.invoice-green {
+    color: #2ecc71; /* Green color from image */
+}
+
+.invoice-blue {
+    color: #2e86de; /* Blue shade for variety */
+}
+
+/* Graph Box Adjustments */
+.glass-stat-card.graph-box {
+    flex: 1.5; /* Graph එක ඇති කාඩ්පත මදක් විශාල කිරීමට */
+    justify-content: space-between;
+    padding: 20px;
+}
+
+.invoice-graph-wrapper {
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Table Glass Container */
+.table-glass-container {
+    background: rgba(255, 255, 255, 0.8); 
+    backdrop-filter: blur(12px);
+    border-radius: 35px;
+    padding: 30px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+    width: 95%;
+    max-width: 1200px;
+    margin-bottom: 50px;
+}
+
+.table-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.title-section {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Search Bar (Products.css විලාසිතාවමයි) */
+.search-container {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1.5px solid #2ecc71; 
+    border-radius: 30px; 
+    padding-left: 15px;
+    width: 300px;
+    height: 40px;
+    overflow: hidden; 
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.search-btn-modern {
+    background-color: #2ecc71; 
+    border: none;
+    height: 100%;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-btn-modern:hover {
+    background-color: #27ae60; 
+}
+
+/* Table Styles */
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table th {
+    text-align: left;
+    padding: 15px;
+    color: #888;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+}
+
+.modern-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f8f8f8;
+    color: #444;
+}
+
+.modern-table tbody tr:hover {
+    background: rgba(46, 204, 113, 0.05); /* Row එක මතට ගියවිට ලා කොළ පැහැ වීම */
+}
+.open-pdf-btn {
+    background-color: #2e7d32; /* Dumbara Green Color */
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.open-pdf-btn:hover {
+    background-color: #1b5e20; /* Hover කරද්දී තද කොළ පැහැය */
+}
+
+/* Delete Invoice Button එක සඳහා CSS */
+.delete-invoice-btn {
+    background-color: #e53935; /* රතු පැහැය */
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.delete-invoice-btn:hover {
+    background-color: #b71c1c; /* Hover කරද්දී තද රතු පැහැය */
+}
+
+.delete-invoice-btn:active {
+    transform: scale(0.95); /* ක්ලික් කරන මොහොතේදී පොඩි ඇතුලට යන Effect එකක් */
+}

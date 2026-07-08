@@ -1,0 +1,345 @@
+/* ==========================================================================
+   🎨 DUMBARA SUPERMARKET - REPORTS PAGE CSS (PRODUCTS STYLES MATCHED)
+   ========================================================================== */
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fadeInRight {
+    animation: fadeInRight 0.2s ease-out forwards; 
+}
+
+.main-layout {
+    display: flex;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+}
+
+.content-area {
+    flex: 1;
+    margin-left: 260px; /* Sidebar එකට ඇති ඉඩ */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: flex-start;
+    overflow-x: hidden;
+}
+
+/* Header Info */
+.top-row {
+    width: 95%; 
+    max-width: 1200px;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+}
+
+.user-icon {
+    width: 40px;
+    height: 40px;
+    background: #ffffffaa;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
+/* Table Glass Container */
+.table-glass-container {
+    background: rgba(255, 255, 255, 0.8); 
+    backdrop-filter: blur(12px);
+    border-radius: 35px;
+    padding: 30px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+    width: 95%;
+    max-width: 1200px;
+    margin-bottom: 50px;
+    margin-top: 20px;
+}
+
+.table-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.title-section {
+    font-size: 1.6rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #333;
+}
+
+/* ➕ Plus Button Style */
+.plus-icon {
+    background: #2ecc71;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    cursor: pointer;
+    line-height: 1; 
+    padding-bottom: 4px; 
+    transition: 0.2s ease;
+}
+
+.plus-icon:hover {
+    transform: scale(1.1);
+    background: #27ae60;
+}
+
+/* Table Architecture */
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table th {
+    text-align: left;
+    padding: 15px;
+    color: #888;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+}
+
+.modern-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f8f8f8;
+    color: #444;
+}
+
+.modern-table tbody tr:hover {
+    background: rgba(46, 204, 113, 0.05); 
+}
+
+/* Search Bar Component */
+.search-container {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1.5px solid #2ecc71; 
+    border-radius: 30px; 
+    padding-left: 15px;
+    width: 300px;
+    height: 40px;
+    overflow: hidden; 
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+}
+
+.search-btn-modern {
+    background-color: #2ecc71; 
+    border: none;
+    height: 100%;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.search-btn-modern:hover {
+    background-color: #27ae60; 
+}
+
+/* ==========================================================================
+   🟩 REPORT SIDEBAR OVERLAY STYLES (SHARED FROM PRODUCTS.CSS)
+   ========================================================================== */
+.add-product-overlay {
+    position: fixed;
+    top: 0;
+    right: -100%; /* මුලින් සැඟවී පවතී */
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2); 
+    display: flex;
+    justify-content: flex-end;
+    transition: right 0.4s ease-in-out;
+    z-index: 2000;
+}
+
+.add-product-overlay.open {
+    right: 0; /* දිග හැරුණු පසු screen එක මතට එයි */
+}
+
+/* දකුණු පස ඇති කොළ පැහැති Sidebar එක */
+.add-product-sidebar {
+    width: 350px;
+    height: 100%;
+    background: rgba(30, 160, 90, 0.9); /* කොළ පැහැති Glass පසුබිම */
+    backdrop-filter: blur(15px);
+    padding: 30px;
+    color: white;
+    box-shadow: -10px 0 30px rgba(0,0,0,0.2);
+    overflow-y: auto; 
+    border-top-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.add-product-sidebar h2 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    font-weight: bold;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    background: transparent;
+    color: white;
+    outline: none;
+    font-size: 0.95rem;
+}
+
+/* Dropdown Options කළු පැහැ කිරීම */
+.form-input option {
+    color: black !important;
+    background-color: white; 
+}
+
+.form-input:focus {
+    color: white;
+}
+
+/* 📅 Time Range Special Layout */
+.report-time-range-wrapper {
+    margin-top: 25px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 15px;
+}
+
+.time-range-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: white;
+}
+
+/* YY MM DD ඩ්‍රොප්ඩවුන් පේළිය */
+.report-dropdown-row {
+    display: flex;
+    gap: 8px;
+}
+
+.sub-select {
+    flex: 1;
+    padding: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+    border-radius: 15px;
+}
+
+/* Buttons Styles */
+.form-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 35px;
+}
+
+.add-btn, .cancel-btn {
+    padding: 12px;
+    border-radius: 15px;
+    border: none;
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.add-btn {
+    background: #27f0b5;
+    color: #11773b;
+}
+
+.cancel-btn {
+    background: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.add-btn:hover, .cancel-btn:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+
+.report-open-btn {
+    background-color: #28a745; 
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    font-weight: 5px;
+    transition: background-color 0.2s ease;
+}
+
+.report-delete-btn {
+    background-color: #dc3545; 
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.report-open-btn:hover {
+    background-color: #218838;
+}
+
+.report-delete-btn:hover {
+    background-color: #c82333;
+}
+
+.toggle-arrow-icon:hover {
+    transform: scale(1.2);
+    color: #218838 !important;
+}

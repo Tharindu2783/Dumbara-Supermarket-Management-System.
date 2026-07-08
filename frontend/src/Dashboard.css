@@ -1,0 +1,312 @@
+/* ==========================================================================
+   Dashboard.css - COMPLETELY ISOLATED STYLES (Prefix: db-)
+   ========================================================================== */
+
+@keyframes db-fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.db-fadeInRight {
+    animation: db-fadeInRight 0.2s ease-out forwards; 
+}
+
+.db-main-layout {
+    display: flex;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+}
+
+.db-content-area {
+    flex: 1;
+    margin-left: 260px; 
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: flex-start;
+    overflow-x: hidden;
+}
+
+.db-user-icon {
+    width: 40px;
+    height: 40px;
+    background: #ffffffaa;
+    border-radius: 50%;
+    border: 1px solid white;
+}
+
+.db-stats-container {
+    display: flex;
+    justify-content: space-between; 
+    gap: 15px;
+    margin-bottom: 30px;
+    width: 95%;
+    max-width: 1200px;
+}
+
+.db-glass-stat-card {
+    background: rgba(255, 255, 255, 0.83); 
+    backdrop-filter: blur(12px);
+    border-radius: 22px;
+    padding: 20px 15px;
+    flex: 1;
+    min-height: 140px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* 🎯 FIXED: නිකන්ම h3 ලියනවා වෙනුවට class එකක් පමණක් සිලෙක්ට් කර ඇත */
+.db-glass-stat-card-title {
+    font-size: 1.1rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0 0 10px 0;
+}
+
+/* 🎯 FIXED: !important සියල්ල ඉවත් කර ඇත */
+/* 🎯 Dashboard එකට විතරක් අයිති Unique Class එකක් */
+.db-only-total-number {
+    font-size: 1.8rem; /* ඩෑෂ්බෝඩ් එකේ ඔයාට ඕන සයිස් එක මෙතනින් හදන්න */
+    font-weight: 800;
+    margin: 0;    
+    line-height: 1.2;
+}
+
+.db-sales-color { color: #2e86de; }
+.db-profit-color { color: #2ecc71; }
+.db-items-color { color: #f39c12; }
+.db-suppliers-color { color: #9b59b6; }
+
+.db-table-glass-container {
+    background: rgba(255, 255, 255, 0.83); 
+    backdrop-filter: blur(12px);
+    border-radius: 28px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    width: 95%;
+    max-width: 1200px;
+    margin-bottom: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+}
+
+.db-table-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.db-title-section {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.db-graph-wrapper {
+    width: 100%;
+    margin-top: 5px;
+}
+
+/* --- Dashboard AI Chatbot CSS Styles --- */
+.db-ai-assistant-wrapper {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 10000;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.db-ai-float-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    font-size: 26px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.db-ai-float-btn:hover {
+    transform: scale(1.08);
+}
+
+.db-ai-float-btn.db-chat-active {
+    background: #dc3545;
+    box-shadow: 0 8px 24px rgba(220, 53, 69, 0.3);
+}
+
+.db-ai-chat-window {
+    position: absolute;
+    bottom: 75px;
+    right: 0;
+    width: 380px;
+    height: 480px;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e2e8f0;
+}
+
+.db-ai-chat-header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+}
+
+.db-ai-avatar {
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.db-ai-chat-header h4 {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.db-online-dot {
+    font-size: 11px;
+    color: #2ecc71;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.db-online-dot::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: #2ecc71;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.db-ai-chat-messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.db-ai-msg-row {
+    display: flex;
+    width: 100%;
+}
+
+.db-bot-row { justify-content: flex-start; }
+.db-user-row { justify-content: flex-end; }
+
+.db-ai-message-bubble {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    line-height: 1.5;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.db-bot-row .db-ai-message-bubble {
+    background: white;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+    border-top-left-radius: 2px;
+}
+
+.db-user-row .db-ai-message-bubble {
+    background: #2a5298;
+    color: white;
+    border-top-right-radius: 2px;
+}
+
+.db-ai-chat-input-area {
+    padding: 12px;
+    background: white;
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.db-ai-chat-input-area input {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 20px;
+    border: 1px solid #cbd5e1;
+    font-size: 13.5px;
+    outline: none;
+}
+
+.db-ai-chat-input-area button {
+    background: #2a5298;
+    color: white;
+    border: none;
+    padding: 0 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    transition: background 0.2s;
+}
+
+.db-ai-chat-input-area button:hover { background: #1e3c72; }
+.db-ai-chat-input-area button:disabled { background: #94a3b8; cursor: not-allowed; }
+
+.db-typing-indicator span {
+    height: 6px;
+    width: 6px;
+    background: #94a3b8;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 4px;
+    animation: dbBounce 1.3s infinite;
+}
+.db-typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
+.db-typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+
+@keyframes dbBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4px); }
+}
+
+.db-animate-popup {
+    animation: dbPopup 0.25s ease-out;
+}
+@keyframes dbPopup {
+    from { opacity: 0; transform: translateY(15px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}

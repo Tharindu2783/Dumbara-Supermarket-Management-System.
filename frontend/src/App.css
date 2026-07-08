@@ -1,0 +1,11 @@
+/* App.css */
+.app-layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    /* මෙතන margin-left දාන්න එපා, ඒක Products.css එකෙන් පාලනය කරමු */
+}

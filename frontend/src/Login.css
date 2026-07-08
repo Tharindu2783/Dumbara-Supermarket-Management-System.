@@ -1,0 +1,239 @@
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fadeInRight {
+    animation: fadeInRight 1.5s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* LEFT SIDE */
+.login-left {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: flex-end; /* Pushes the content box to the right side of this panel */
+  align-items: center;
+}
+
+.login-left::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg-url) no-repeat center center/cover;
+  filter: blur(12px); 
+  transform: scale(1.1); 
+  z-index: 1;
+}
+
+.brand-content {
+  position: relative;
+  z-index: 2; 
+  color: white;
+  text-align: right; 
+  /* SHIFTED RIGHT: Reduced padding from 30px to 15px */
+  padding-right: 1px; 
+}
+
+.brand-content h1 {
+  font-size: 8rem;
+  font-weight: 900;
+  font-style: italic;
+  text-shadow: 4px 4px 30px rgba(0,0,0,0.6);
+  line-height: 0.9;
+  font-family: protest, sans-serif;
+}
+
+.brand-content p {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 9px;
+}
+
+/* RIGHT SIDE */
+.login-right {
+  flex: 1;
+  background: linear-gradient(135deg, #021d10 0%, #0a5c2e 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 40px;
+  padding: 60px 50px;
+  width: 440px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  color: white;
+  text-align: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-top: 30px;
+}
+
+.input-group {
+  margin-bottom: 25px;
+}
+
+.input-group label {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-group input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50px;
+  padding: 15px 25px;
+  color: white;
+  outline: none;
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.login-button {
+  margin-top: 10px;
+  padding: 18px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #1de9b6 0%, #00b0ff 100%);
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 233, 182, 0.3);
+}
+
+/* Add only this block to your Login.css */
+.chart-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  
+  /* The Watermark Look */
+  opacity: 0.15;      /* Low opacity as requested */
+  filter: blur(8px);  /* Blurred effect */
+  
+  z-index: 1;         /* Sits behind the card */
+  pointer-events: none; /* Makes sure you can still click the form */
+}
+
+/* Ensure your glass-card has a higher z-index to stay on top */
+.glass-card {
+  position: relative;
+  z-index: 10;
+  /* Do not change your other glass-card attributes */
+}
+
+/* MODERN DROPDOWN STYLING */
+
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.modern-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px; /* මදක් හතරැස් පෙනුමක් සහිත නවීන නිමාවක් */
+  padding: 15px 20px;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  cursor: pointer;
+  appearance: none; /* Default arrow එක අයින් කරන්න */
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+/* Hover කළ විට පෙනුම */
+.modern-select:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #1de9b6;
+  box-shadow: 0 0 15px rgba(29, 233, 182, 0.2);
+}
+
+/* Dropdown එක ඇතුළත ඇති Options වල පෙනුම */
+.modern-select option {
+  background: #06311a; /* ඔබේ තේමාවට ගැලපෙන තද කොළ පැහැය */
+  color: white;
+  padding: 10px;
+}
+
+/* අලුත් ලස්සන Arrow එකක් නිර්මාණය කිරීම */
+.select-arrow {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  width: 0; 
+  height: 0; 
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 7px solid #1de9b6; /* Neon කොළ පැහැති ඊතලයක් */
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+
+/* Select එක click කළ විට arrow එක කැරකීමට */
+.modern-select:focus + .select-arrow {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Input boxes වලටත් පොඩි වෙනසක් (Consistency සඳහා) */
+.input-group input {
+  border-radius: 15px !important; /* Dropdown එකේ හැඩයටම සැකසීම */
+  transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+  border-color: #1de9b6;
+  box-shadow: 0 0 15px rgba(0, 176, 255, 0.2);
+}

@@ -1,0 +1,45 @@
+/* ප්‍රධාන Container එක - මේකෙන් ඇතුළේ තියෙන Badge එක දකුණටම තල්ලු කරයි */
+.global-header-container {
+    display: flex;
+    justify-content: flex-end; /* 👈 මෙන්න මේකෙන් තමයි දකුණු පැත්තටම ගන්නේ */
+    align-items: center;
+    width: 100%;
+    padding: 10px 0px 15px 0px; 
+    box-sizing: border-box;
+}
+
+/* දකුණු පස ඇති Glass Badge එක */
+.header-badge-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.25) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    padding: 6px 16px;
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Badge එක ඇතුළේ අයිකන් එක */
+.badge-icon {
+    font-size: 0.95rem;
+}
+
+/* Role Text එක (Assistant / Manager) */
+.badge-text {
+    color: #1e1e1e;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* දකුණු කෙළවරේ ඇති කොළ පාට රවුම */
+.badge-status-dot {
+    width: 12px;
+    height: 12px;
+    background-color: #2ecc71;
+    border-radius: 50%;
+    margin-left: 4px;
+    box-shadow: 0 0 8px #2ecc71;
+}
