@@ -44,3 +44,5 @@ db.close((err) => {
         console.log("🏁 Bulk data insertion completed successfully!");
     }
 });
+
+// Testing my Git connection
