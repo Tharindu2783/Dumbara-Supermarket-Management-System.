@@ -52,4 +52,84 @@ router.get('/billing-stats', (req, res) => {
     });
 });
 
+// ➕ Invoice එකක් ඇතුළත් කිරීම, invoice_products යාවත්කාලීන කිරීම සහ තොග (Stock Qty) අඩු කිරීමේ API
+router.post('/add-invoice', (req, res) => {
+    const { InvoiceID, Product_Qty, Total, Profit, Date, Time, ProductList, ProductNameList, CountList } = req.body;
+
+    // 1. මුලින්ම Invoice ටේබල් එකට සේව් කරගන්නවා
+    const invoiceQuery = `INSERT INTO Invoice (InvoiceID, Product_Qty, Total, Profit, Date, Time) VALUES (?, ?, ?, ?, ?, ?)`;
+    
+    db.run(invoiceQuery, [InvoiceID, Product_Qty, Total, Profit, Date, Time], function(err) {
+        if (err) {
+            console.error("❌ Invoice Save Error:", err.message);
+            return res.status(500).json({ success: false, message: err.message });
+        }
+
+        // 2. 💡 FIX: invoice_products ටේබල් එකට බිල් එකේ බඩු ලැයිස්තුව ඇතුළත් කිරීම (INVID එකට InvoiceID එකම ලබා දේ)
+        const invoiceProductsQuery = `INSERT INTO invoice_products (INVID, ProductList, ProductNameList, CountList, Date, Time) VALUES (?, ?, ?, ?, ?, ?)`;
+        
+        db.run(invoiceProductsQuery, [InvoiceID, ProductList, ProductNameList, CountList, Date, Time], function(err) {
+            if (err) {
+                console.error("❌ invoice_products Save Error:", err.message);
+                // Invoice එක සේව් වුණත් මේක ෆේල් වුණොත් දැනුම් දෙනවා
+            }
+
+            // 3. බිල් එකේ තියෙන බඩු වල බාර්කෝඩ් සහ ප්‍රමාණයන් Array වලට වෙන් කරගැනීම
+            const barcodes = ProductList ? ProductList.split(',') : [];
+            const quantities = CountList ? CountList.split(',') : [];
+
+            if (barcodes.length === 0 || ProductList === '') {
+                return res.json({ success: true, message: "Invoice saved with no items." });
+            }
+
+            let completedQueries = 0;
+            let hasError = false;
+
+            // 4. Loop එකක් මඟින් එකින් එක භාණ්ඩයේ තොග අඩු කිරීම
+            barcodes.forEach((barcode, index) => {
+                const qtyToRemove = parseFloat(quantities[index]) || 0;
+                const cleanBarcode = barcode.trim();
+
+                // සාමාන්‍ය බඩු ටේබල් එක (product) බාර්කෝඩ් එකෙන් අප්ඩේට් කිරීම
+                const updateProductQuery = `UPDATE product SET Quantity = Quantity - ? WHERE Barcode = ? OR Product_ID = ?`;
+                
+                db.run(updateProductQuery, [qtyToRemove, cleanBarcode, cleanBarcode], function(err) {
+                    if (err) {
+                        hasError = true;
+                        console.error("❌ Error updating unit product stock:", err.message);
+                    }
+
+                    // කිරන බඩු ටේබල් එක (bulk_products) බාර්කෝඩ් එකෙන් හෝ ID එකෙන් අප්ඩේට් කිරීම
+                    const updateBulkQuery = `UPDATE bulk_products SET Quantity = Quantity - ? WHERE Barcode = ? OR BulkProductID = ?`;
+                    
+                    db.run(updateBulkQuery, [qtyToRemove, cleanBarcode, cleanBarcode], function(err) {
+                        if (err) {
+                            hasError = true;
+                            console.error("❌ Error updating bulk product stock:", err.message);
+                        }
+
+                        completedQueries++;
+                        
+                        // සියලුම භාණ්ඩ අප්ඩේට් වී අවසන් වූ පසු Response එක යැවීම
+                        if (completedQueries === barcodes.length) {
+                            if (hasError) {
+                                return res.json({ 
+                                    success: true, 
+                                    message: "Invoice saved, but some stocks might not have updated correctly." 
+                                });
+                            }
+                            return res.json({ 
+                                success: true, 
+                                message: "Invoice saved, invoice_products updated and Stocks updated successfully!" 
+                            });
+                        }
+                    });
+                });
+            });
+        });
+    });
+});
+
+
+
 module.exports = router;

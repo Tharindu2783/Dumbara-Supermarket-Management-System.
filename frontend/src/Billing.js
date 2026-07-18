@@ -21,9 +21,12 @@ function Billing() {
     const [balance, setBalance] = useState(0);
 
     const [allProducts, setAllProducts] = useState([]);
-    // 💡 Custom Dropdown එක පාලනය කිරීමට ප්‍රාන්ත (States)
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
+
+    // 💡 අලුතින් එකතු කළ States
+    const [isBulk, setIsBulk] = useState(false); 
+    const [weightUnit, setWeightUnit] = useState('Kg'); 
 
     const fetchStats = () => {
         fetch('http://localhost:5000/api/billing-stats')
@@ -60,10 +63,20 @@ function Billing() {
                             setPrice(data.price);
                             setPurchasePrice(data.purchasePrice || 0); 
                             setQty(1);
+
+                            // බාර්කෝඩ් එකෙන් සෙවීමේදී Bulk product එකක්දැයි හඳුනාගැනීම
+                            const matchedProduct = allProducts.find(p => p.Barcode === barcode);
+                            if (matchedProduct && (matchedProduct.Type === 'Bulk' || (matchedProduct.ID && matchedProduct.ID.startsWith('B')))) {
+                                setIsBulk(true);
+                                setWeightUnit('Kg');
+                            } else {
+                                setIsBulk(false);
+                            }
                         } else {
                             setItem('');
                             setPrice('');
                             setPurchasePrice(0);
+                            setIsBulk(false);
                         }
                     })
                     .catch(err => console.error(err));
@@ -71,9 +84,8 @@ function Billing() {
 
             return () => clearTimeout(delayDebounceFn);
         }
-    }, [barcode]);
+    }, [barcode, allProducts]);
 
-    // 💡 🆕 FIX: ටයිප් කරද්දී ලිස්ට් එක Filter කරන ෆන්ක්ෂන් එක
     const handleInputChange = (e) => {
         const value = e.target.value;
         setItem(value);
@@ -89,14 +101,22 @@ function Billing() {
         }
     };
 
-    // 💡 🆕 FIX: ලිස්ට් එකෙන් අයිතමයක් ක්ලික් කරපු ගමන් ක්‍රියාත්මක වන ෆන්ක්ෂන් එක (මැකෙන්නේ නැත!)
     const handleSelectProduct = (product) => {
-        setItem(product.Name); // නම විතරක් Input එකට දානවා
+        setItem(product.Name); 
         setPrice(product.Sell_Price || 0);
         setPurchasePrice(product.Purchase_Price || 0);
         setBarcode(product.Barcode || product.ID || '');
-        setQty(1);
-        setShowDropdown(false); // සිලෙක්ට් කළ පසු ලිස්ට් එක වසන්න
+        
+        // Bulk Product එකක් නම් Default 1Kg ලෙස සැකසීම
+        if (product.Type === 'Bulk' || (product.ID && product.ID.startsWith('B'))) {
+            setIsBulk(true);
+            setWeightUnit('Kg');
+            setQty(1); 
+        } else {
+            setIsBulk(false);
+            setQty(1); 
+        }
+        setShowDropdown(false); 
     };
 
     const handleAddItem = () => {
@@ -105,13 +125,22 @@ function Billing() {
             return;
         }
 
+        let finalQtyForDB = parseFloat(qty) || 1; 
+        let displayQty = qty + (isBulk ? ` ${weightUnit}` : ''); 
+
+        // ග්‍රෑම් (g) තෝරා ඇත්නම් එය ඩේටාබේස් එක සඳහා කිලෝග්‍රෑම් (0.250) බවට පත් කිරීම
+        if (isBulk && weightUnit === 'g') {
+            finalQtyForDB = parseFloat(qty) / 1000;
+        }
+
         const newItem = {
             barcode: barcode, 
             item: item,
-            qty: parseFloat(qty) || 1, 
+            qty: finalQtyForDB, 
+            displayQty: displayQty, 
             price: parseFloat(price) || 0,
             purchasePrice: parseFloat(purchasePrice) || 0, 
-            total: (parseFloat(qty) || 1) * (parseFloat(price) || 0)
+            total: finalQtyForDB * (parseFloat(price) || 0)
         };
 
         setBillItems([...billItems, newItem]);
@@ -120,6 +149,7 @@ function Billing() {
         setPrice('');
         setQty(1);
         setPurchasePrice(0);
+        setIsBulk(false); 
     };
 
     const total = billItems.reduce((acc, curr) => acc + curr.total, 0);
@@ -148,7 +178,7 @@ function Billing() {
         const tableRows = items.map(item => [
             item.item,
             `Rs ${item.price.toFixed(2)}`,
-            item.qty,
+            item.displayQty, 
             `Rs ${item.total.toFixed(2)}`
         ]);
 
@@ -195,7 +225,7 @@ function Billing() {
             return;
         }
 
-        const totalQty = billItems.reduce((acc, curr) => acc + (parseFloat(curr.qty) || 0), 0);
+        const totalQty = billItems.length;
         const totalProfit = billItems.reduce((acc, curr) => {
             return acc + (((parseFloat(curr.price) || 0) - (parseFloat(curr.purchasePrice) || 0)) * (parseFloat(curr.qty) || 0));
         }, 0);
@@ -287,7 +317,6 @@ function Billing() {
                             <input type="text" placeholder="Bar Code" className="billing-input-field" value={barcode} onChange={(e) => setBarcode(e.target.value)} />
                         </div>
                         
-                        {/* 💡 Custom Dropdown එක සහිත Input Box එක */}
                         <div className="bill-form-group" style={{ position: 'relative' }}>
                             <input 
                                 type="text" 
@@ -296,11 +325,10 @@ function Billing() {
                                 value={item} 
                                 onChange={handleInputChange} 
                                 onFocus={() => setShowDropdown(true)}
-                                onBlur={() => setTimeout(() => setShowDropdown(false), 200)} // ක්ලික් එක අහුවෙන්න පොඩි ඩිලේ එකක් දුන්නා
+                                onBlur={() => setTimeout(() => setShowDropdown(false), 200)} 
                                 autoComplete="off"
                             />
                             
-                            {/* 💡 🆕 Custom Dropdown ලිස්ට් එක */}
                             {showDropdown && filteredProducts.length > 0 && (
                                 <ul className="billing-custom-dropdown">
                                     {filteredProducts.map((p, index) => (
@@ -317,9 +345,30 @@ function Billing() {
                             )}
                         </div>
 
-                        <div className="bill-form-group">
-                            <input type="number" placeholder="Qty" className="billing-input-field" value={qty} onChange={(e) => setQty(e.target.value)} min="0.001" step="any" />
-                        </div>
+                        {/* Qty Input සහ Kg/g Dropdown කොටස */}
+                        <div className="bill-form-group billing-qty-container">
+    <input 
+        type="number" 
+        placeholder="Qty" 
+        className="billing-input-field" 
+        value={qty} 
+        onChange={(e) => setQty(e.target.value)} 
+        min="0.001" 
+        step="any" 
+    />
+    
+    {isBulk && (
+        <select 
+            value={weightUnit} 
+            onChange={(e) => setWeightUnit(e.target.value)}
+            className="billing-unit-select"
+        >
+            <option value="Kg">Kg</option>
+            <option value="g">g</option>
+        </select>
+    )}
+</div>
+
                         <div className="bill-form-group">
                             <input type="number" placeholder="Price" className="billing-input-field" value={price} onChange={(e) => setPrice(e.target.value)} />
                         </div>
@@ -348,7 +397,7 @@ function Billing() {
                                         billItems.map((bi, index) => (
                                             <tr key={index}>
                                                 <td>{bi.item}</td>
-                                                <td>{Number(bi.qty) % 1 === 0 ? bi.qty : Number(bi.qty).toFixed(3)}</td>
+                                                <td>{bi.displayQty || bi.qty}</td> 
                                                 <td>{bi.price.toFixed(2)}</td>
                                                 <td>{bi.total.toFixed(2)}</td>
                                                 <td><button className="delete-btn-small" onClick={() => setBillItems(billItems.filter((_, i) => i !== index))}>Remove</button></td>
