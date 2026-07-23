@@ -1,0 +1,387 @@
+/* ==========================================
+   MOBILE & RESPONSIVE HEADER & MODALS CSS
+   ========================================== */
+
+.global-header-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 20px;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 500;
+}
+
+.header-badge-box {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    color: #fff;
+    z-index: 10000;
+}
+
+.dropdown-arrow-icon {
+    font-size: 10px;
+    opacity: 0.7;
+    margin-left: 2px;
+}
+
+.header-profile-dropdown {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: rgba(30, 39, 46, 0.98);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    width: 180px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    z-index: 100001;
+    overflow: hidden;
+    animation: fadeInDropdown 0.2s ease-out;
+}
+
+.dropdown-item {
+    padding: 12px 15px;
+    color: #fff;
+    font-size: 13.5px;
+    text-align: left;
+    transition: 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logout-item {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    color: #ff5e57;
+}
+
+.logout-item:hover {
+    background: rgba(255, 94, 87, 0.15);
+}
+
+/* Modal Overlay & Base Card */
+.profile-modal-overlay {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: rgba(0, 0, 0, 0.75) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 9999999 !important;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+}
+
+.profile-modal-card {
+    background: rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(25px) !important;
+    WebkitBackdropFilter: blur(25px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5) !important;
+    width: 100% !important;
+    max-width: 450px !important;
+    border-radius: 12px !important;
+    padding: 20px !important;
+    color: #fff !important;
+    box-sizing: border-box !important;
+    animation: popupScale 0.25s ease-out !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+}
+
+/* Expanded Card Size for All Profile Details */
+.modal-large-card {
+    max-width: 580px !important;
+}
+
+/* 📱 Responsive grid: shows 2 columns on large screens and 1 column on mobile */
+.modal-grid-2col {
+    display: flex !important;
+    gap: 12px !important;
+}
+
+.modal-grid-2col .sett-input-group {
+    flex: 1 !important;
+}
+
+.profile-modal-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 15px !important;
+}
+
+.profile-modal-header h3 {
+    margin: 0 !important;
+    font-size: 17px !important;
+    color: #fff !important;
+}
+
+.close-x-btn {
+    background: none !important;
+    border: none !important;
+    color: #bbb !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+}
+
+.close-x-btn:hover { color: #fff !important; }
+
+.modal-divider {
+    border: 0 !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+    margin: 15px 0 !important;
+}
+
+.step-desc-text {
+    font-size: 13px !important;
+    color: #ccc !important;
+    line-height: 1.5 !important;
+    text-align: left !important;
+    margin-bottom: 15px !important;
+}
+
+.req-otp-btn, .save-pass-btn {
+    width: 100% !important;
+    padding: 11px !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    background: #2ecc71 !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3) !important;
+}
+
+.req-otp-btn:hover, .save-pass-btn:hover { background: #27ae60 !important; }
+
+.sett-input-group {
+    display: flex !important;
+    flex-direction: column !important;
+    text-align: left !important;
+    margin-bottom: 12px !important;
+}
+
+.sett-input-group label {
+    font-size: 12.5px !important;
+    color: #ddd !important;
+    margin-bottom: 4px !important;
+}
+
+.sett-input-group input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 12px !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    background: rgba(255,255,255,0.05) !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+.sett-input-group input:disabled {
+    background: rgba(0, 0, 0, 0.25) !important;
+    color: #aaa !important;
+    border-color: rgba(255,255,255,0.08) !important;
+}
+
+.step-two-buttons {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: 15px !important;
+}
+
+.back-step-btn {
+    padding: 10px 15px !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    background: transparent !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+}
+
+.back-step-btn:hover { background: rgba(255,255,255,0.1) !important; }
+
+.modal-status-alert {
+    padding: 10px !important;
+    border-radius: 6px !important;
+    font-size: 13px !important;
+    margin-bottom: 15px !important;
+    text-align: left !important;
+}
+.modal-status-alert.success { background: rgba(46, 204, 113, 0.2) !important; color: #2ecc71 !important; border: 1px solid #2ecc71 !important; }
+.modal-status-alert.error { background: rgba(231, 76, 60, 0.2) !important; color: #ff6b6b !important; border: 1px solid #e74c3c !important; }
+
+/* Modal Inner Glass Loader */
+.modal-glass-loader {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: rgba(0, 0, 0, 0.65) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border-radius: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 99999999 !important;
+    animation: fadeInLoader 0.3s ease-in-out !important;
+}
+
+.modern-otp-spinner {
+    width: 45px !important;
+    height: 45px !important;
+    border: 4px solid rgba(46, 204, 113, 0.1) !important;
+    border-radius: 50% !important;
+    border-top-color: #2ecc71 !important; 
+    animation: spinRing 0.8s cubic-bezier(0.55, 0.055, 0.675, 0.19) infinite !important;
+}
+
+.loader-otp-text {
+    color: #fff !important;
+    margin-top: 15px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.5px !important;
+    text-shadow: 0 0 8px rgba(46, 204, 113, 0.5) !important;
+    animation: pulseText 1.2s ease-in-out infinite alternate !important;
+}
+
+.create-user-item {
+    color: #2ecc71 !important;
+    font-weight: bold;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.create-user-item:hover {
+    background: rgba(46, 204, 113, 0.15) !important;
+}
+
+.sett-select-input {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding: 10px 12px !important;
+    border-radius: 6px !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    background: rgba(30, 39, 46, 0.9) !important;
+    color: #fff !important;
+    outline: none !important;
+}
+
+.sett-select-input option {
+    background: #1e272e;
+    color: #fff;
+}
+
+.change-user-item {
+    color: #f1c40f !important;
+    font-weight: bold;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.change-user-item:hover {
+    background: rgba(241, 196, 15, 0.15) !important;
+}
+
+.delete-red-btn {
+    width: 100% !important;
+    padding: 11px !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    cursor: pointer !important;
+    background: #e74c3c !important;
+    color: #fff !important;
+    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3) !important;
+    transition: 0.2s ease-in-out;
+}
+
+.delete-red-btn:hover { background: #c0392b !important; }
+.delete-red-btn:disabled { background: rgba(231, 76, 60, 0.4) !important; cursor: not-allowed !important; }
+
+.nic-suggestions-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: #1e272e;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    max-height: 160px;
+    overflow-y: auto;
+    z-index: 10000;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+}
+
+.suggestion-item {
+    padding: 10px 12px;
+    font-size: 13px;
+    color: #fff;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    transition: background 0.2s;
+}
+
+.suggestion-item:hover {
+    background: rgba(241, 196, 15, 0.2);
+    color: #f1c40f;
+}
+
+/* 📱 MEDIA QUERIES FOR MOBILE & TABLET SCREENS */
+@media screen and (max-width: 768px) {
+    .modal-grid-2col {
+        flex-direction: column !important;
+        gap: 0 !important;
+    }
+    
+    .profile-modal-card {
+        width: 95% !important;
+        padding: 15px !important;
+        max-height: 85vh !important;
+    }
+
+    .step-two-buttons {
+        flex-direction: column !important;
+    }
+}
+
+/* Keyframes */
+@keyframes fadeInDropdown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes popupScale {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes spinRing {
+    to { transform: rotate(360deg); }
+}
+@keyframes pulseText {
+    from { opacity: 0.6; }
+    to { opacity: 1; }
+}
+@keyframes fadeInLoader {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

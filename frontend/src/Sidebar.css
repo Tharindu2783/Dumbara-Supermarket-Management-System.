@@ -1,0 +1,160 @@
+/* ==========================================================================
+   Sidebar.css - FULLY RESPONSIVE STYLES (SCROLLBAR FIX)
+   ========================================================================== */
+
+.sidebar {
+    width: 260px;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.5); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 20px;
+    border-right: 1px solid rgba(255, 255, 255, 0.4);
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+    box-sizing: border-box;
+    transition: transform 0.3s ease-in-out;
+}
+
+.sidebar-brand {
+    margin-bottom: 40px;
+    color: #09853c;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.brand-name { 
+    font-size: 2.5rem; 
+    line-height: 1; 
+    margin: 0; 
+    text-align: left;
+}
+
+.brand-sub { 
+    font-size: 1.2rem; 
+    margin: 0; 
+    font-weight: 700;
+    align-self: flex-end; 
+    padding-right: 10px; 
+}
+
+/* 🟢 Horizontal Scrollbar එක නවත්වන්න overflow-x: hidden කළා */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    overflow-y: auto; 
+    overflow-x: hidden; /* 🛑 Horizontal scrollbar සම්පූර්ණයෙන්ම නැවැත්තුවා */
+    padding-right: 5px; /* Hover animation එක කැපෙන්නේ නැතුව ලස්සනට පෙනීමට */
+}
+
+/* Scrollbar එක සඟවා තැබීමට (වාසිදායකයි) */
+.sidebar-nav::-webkit-scrollbar {
+    width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: rgba(46, 204, 113, 0.3);
+    border-radius: 10px;
+}
+
+.nav-item {
+    text-decoration: none;
+    color: #333;
+    font-size: 1.05rem;
+    font-weight: 600;
+    padding: 10px 15px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.nav-item.active {
+    background: #2ecc71;
+    color: white !important;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+}
+
+/* 🟢 hover වෙද්දී දකුණට යන ප්‍රමාණය 3px කර, padding එක හරියටම set කළා */
+.nav-item:hover:not(.active) {
+    background: rgba(46, 204, 113, 0.15);
+    transform: translateX(3px);
+}
+
+.sidebar-logout {
+    margin-top: auto;
+    padding-top: 10px;
+}
+
+.logout-link {
+    text-decoration: none;
+    color: #666;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* 📱 Mobile Hamburger Menu Button Styling */
+.mobile-menu-toggle-btn {
+    display: none; 
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1100;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    align-items: center;
+    justify-content: center;
+}
+
+/* 📱 Mobile Dark Overlay Styling */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+}
+
+/* ==========================================
+   📱 RESPONSIVE MEDIA QUERIES (Mobile & Tablet)
+   ========================================== */
+@media screen and (max-width: 1024px) {
+    .mobile-menu-toggle-btn {
+        display: flex !important; 
+    }
+
+    .sidebar {
+        transform: translateX(-100%); 
+        box-shadow: 5px 0 25px rgba(0,0,0,0.15);
+        background: rgba(255, 255, 255, 0.85); 
+    }
+
+    .sidebar.open {
+        transform: translateX(0); 
+    }
+
+    .sidebar-overlay {
+        display: block;
+    }
+}

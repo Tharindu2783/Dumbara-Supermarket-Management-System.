@@ -1,0 +1,11 @@
+/* App.css */
+.app-layout {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+    /* Do not add margin-left here; it is controlled from Products.css */
+}

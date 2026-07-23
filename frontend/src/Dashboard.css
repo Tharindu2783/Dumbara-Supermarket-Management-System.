@@ -1,0 +1,250 @@
+/* ==========================================================================
+   Dashboard.css - PERFECT DESKTOP & MOBILE RESPONSIVE
+   ========================================================================== */
+
+@keyframes db-fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.db-fadeInRight {
+    animation: db-fadeInRight 0.2s ease-out forwards; 
+}
+
+.db-main-layout {
+    display: flex;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+.db-content-area {
+    flex: 1;
+    margin-left: 260px; /* Desktop Sidebar Space */
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: flex-start;
+    overflow-x: hidden;
+    box-sizing: border-box;
+    width: calc(100% - 260px);
+}
+
+/* 💻 DESKTOP STATS CONTAINER (4 cards in one row) */
+.db-stats-container {
+    display: flex;
+    flex-direction: row; /* 💻 Place them in a single row on desktop */
+    justify-content: space-between; 
+    gap: 15px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+/* 💻 DESKTOP STAT CARDS */
+.db-glass-stat-card {
+    background: rgba(255, 255, 255, 0.83); 
+    backdrop-filter: blur(12px);
+    border-radius: 22px;
+    padding: 20px 15px;
+    flex: 1; /* 💻 Divide evenly */
+    min-width: 0; /* Prevent flexbox overflow */
+    min-height: 120px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+}
+
+.db-glass-stat-card-title {
+    font-size: 1.05rem;
+    color: #333;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.db-only-total-number {
+    font-size: 2rem; 
+    font-weight: 800;
+    margin: 0;    
+    line-height: 1.2;
+}
+
+.db-sales-color { color: #2e86de; }
+.db-profit-color { color: #2ecc71; }
+.db-items-color { color: #f39c12; }
+.db-suppliers-color { color: #9b59b6; }
+
+.db-table-glass-container {
+    background: rgba(255, 255, 255, 0.83); 
+    backdrop-filter: blur(12px);
+    border-radius: 24px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+.db-table-top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.db-title-section {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.db-graph-wrapper {
+    width: 100%;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+/* --- Dashboard AI Chatbot CSS Styles --- */
+.db-ai-assistant-wrapper {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 10000;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.db-ai-float-btn {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: white;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 123, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.db-ai-chat-window {
+    position: absolute;
+    bottom: 65px;
+    right: 0;
+    width: 320px;
+    max-width: calc(100vw - 30px);
+    height: 420px;
+    max-height: 70vh;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #e2e8f0;
+}
+
+.db-ai-chat-header {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    padding: 10px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: white;
+}
+
+.db-ai-chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.db-ai-msg-row { display: flex; width: 100%; }
+.db-bot-row { justify-content: flex-start; }
+.db-user-row { justify-content: flex-end; }
+
+.db-ai-message-bubble {
+    max-width: 85%;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
+}
+
+.db-ai-chat-input-area {
+    padding: 8px;
+    background: white;
+    display: flex;
+    gap: 6px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.db-ai-chat-input-area input {
+    flex: 1;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid #cbd5e1;
+    font-size: 13px;
+    outline: none;
+}
+
+.db-ai-chat-input-area button {
+    background: #2a5298;
+    color: white;
+    border: none;
+    padding: 0 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* ==========================================================================
+   📱 MOBILE & TABLET MEDIA QUERIES 
+   ========================================================================== */
+@media screen and (max-width: 1024px) {
+    .db-content-area {
+        margin-left: 0 !important; 
+        width: 100% !important;
+        padding: 15px !important;
+        padding-top: 65px !important;
+    }
+
+    /* 📱 On mobile only, the stat cards stack vertically one below the other */
+    .db-stats-container {
+        flex-direction: column !important; 
+        gap: 12px !important;
+    }
+
+    .db-glass-stat-card {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    .db-table-glass-container {
+        padding: 12px !important;
+    }
+}

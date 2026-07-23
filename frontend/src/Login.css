@@ -1,0 +1,340 @@
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.fadeInRight {
+    animation: fadeInRight 1.5s;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* LEFT SIDE */
+.login-left {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+}
+
+.login-left::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--bg-url) no-repeat center center/cover;
+  filter: blur(12px); 
+  transform: scale(1.1); 
+  z-index: 1;
+}
+
+.brand-content {
+  position: relative;
+  z-index: 2; 
+  color: white;
+  text-align: right; 
+  padding-right: 30px; 
+}
+
+.brand-content h1 {
+  font-size: 8rem;
+  font-weight: 900;
+  font-style: italic;
+  text-shadow: 4px 4px 30px rgba(0,0,0,0.6);
+  line-height: 0.9;
+  font-family: protest, sans-serif;
+}
+
+.brand-content p {
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 9px;
+}
+
+/* RIGHT SIDE */
+.login-right {
+  flex: 1;
+  background: linear-gradient(135deg, #021d10 0%, #0a5c2e 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* 📱 Mobile Brand Header (Default: Hidden in Desktop) */
+.mobile-brand-header {
+  display: none;
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  z-index: 10;
+}
+
+.mobile-brand-header h1 {
+  font-size: 3.2rem;
+  font-weight: 900;
+  font-style: italic;
+  font-family: protest, sans-serif;
+  line-height: 1;
+  margin: 0;
+  color: #1de9b6;
+  text-shadow: 0 0 15px rgba(29, 233, 182, 0.4);
+}
+
+.mobile-brand-header p {
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 5px;
+  margin-top: 2px;
+  opacity: 0.9;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 40px;
+  padding: 50px 40px;
+  width: 440px;
+  max-width: 90%;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  color: white;
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin-top: 25px;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.input-group label {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.input-group input, .modern-select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px !important;
+  padding: 14px 20px;
+  color: white;
+  outline: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.input-group input:focus, .modern-select:focus {
+  border-color: #1de9b6;
+  box-shadow: 0 0 15px rgba(29, 233, 182, 0.2);
+}
+
+.modern-select option {
+  background: #06311a; 
+  color: white;
+  padding: 10px;
+}
+
+.login-button {
+  margin-top: 5px;
+  padding: 16px;
+  border: none;
+  border-radius: 15px;
+  background: linear-gradient(90deg, #1de9b6 0%, #00b0ff 100%);
+  color: white;
+  font-weight: bold;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.login-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 233, 182, 0.3);
+}
+
+.chart-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  opacity: 0.15;      
+  filter: blur(8px);  
+  z-index: 1;         
+  pointer-events: none; 
+}
+
+/* Forgot Password Link Styling */
+.forgot-password-wrapper {
+  text-align: center;
+  margin-top: 15px;
+}
+
+.forgot-password-link {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.forgot-password-link:hover {
+  color: #2ecc71; 
+  text-shadow: 0 0 10px rgba(46, 204, 113, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Modern Forgot Password Modal Overlay */
+.forgot-modal-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 15px;
+}
+
+.forgot-modal-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 25px;
+  border-radius: 20px;
+  width: 400px;
+  max-width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  color: #fff;
+}
+
+.modal-icon { font-size: 2.2rem; margin-bottom: 8px; }
+.forgot-modal-card h3 { margin: 0 0 10px 0; font-size: 1.4rem; }
+.forgot-modal-card p { font-size: 0.9rem; line-height: 1.4; color: rgba(255, 255, 255, 0.85); margin-bottom: 20px; }
+.forgot-modal-card b { color: #2ecc71; }
+
+.modal-buttons { display: flex; gap: 10px; justify-content: center; }
+.modal-btn-confirm {
+  background: #2ecc71; color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer;
+}
+.modal-btn-cancel {
+  background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.2); padding: 10px 18px; border-radius: 10px; font-weight: 600; cursor: pointer;
+}
+
+/* Loaders */
+.login-glass-loader, .forgot-glass-loader {
+    position: absolute !important;
+    top: 0 !important; left: 0 !important;
+    width: 100% !important; height: 100% !important;
+    background: rgba(2, 29, 16, 0.75) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+    border-radius: 40px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 99999 !important;
+}
+
+.forgot-glass-loader { border-radius: 20px !important; }
+
+.modern-login-spinner {
+    width: 45px !important; height: 45px !important;
+    border: 4px solid rgba(29, 233, 182, 0.1) !important;
+    border-radius: 50% !important;
+    border-top-color: #1de9b6 !important;
+    animation: spinRing 0.8s linear infinite !important;
+}
+
+.loader-login-text {
+    color: #fff !important; margin-top: 12px !important; font-size: 13.5px !important; font-weight: 600 !important; letter-spacing: 1px;
+}
+
+.login-error-alert {
+    background: rgba(231, 76, 60, 0.2) !important;
+    color: #ff6b6b !important;
+    border: 1px solid #e74c3c !important;
+    padding: 10px !important;
+    border-radius: 12px !important;
+    font-size: 0.85rem !important;
+    margin-bottom: 12px !important;
+    text-align: center !important;
+}
+
+@keyframes spinRing { to { transform: rotate(360deg); } }
+
+/* ==========================================
+   📱 MOBILE & TABLET RESPONSIVE MEDIA QUERIES
+   ========================================== */
+@media screen and (max-width: 900px) {
+  .login-container {
+    flex-direction: column !important;
+    overflow-y: auto !important;
+  }
+
+  .login-left {
+    display: none !important;
+  }
+
+  /* On mobile, the brand header is shown at the top */
+  .mobile-brand-header {
+    display: block !important;
+  }
+
+  .login-right {
+    width: 100% !important;
+    min-height: 100vh !important;
+    padding: 20px 15px !important;
+  }
+
+  .glass-card {
+    width: 100% !important;
+    max-width: 380px !important;
+    padding: 30px 22px !important;
+    border-radius: 25px !important;
+  }
+}

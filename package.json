@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "@fontsource/protest-riot": "^5.2.7",
+    "cors": "^2.8.6",
+    "express": "^5.2.1"
+  }
+}
