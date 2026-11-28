@@ -3,13 +3,12 @@ const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-// 💡 app.db එක සම්බන්ධ කරගැනීම
+const { sendApprovalEmail, sendReceivedEmail } = require('./SendEmailOrder');
+
 const dbPath = path.join(__dirname, '../app.db'); 
 const db = new sqlite3.Database(dbPath);
 
-// ==========================================================================
-// 📊 1. සියලුම Orders ටේබල් එකට ගන්නා API එක
-// ==========================================================================
+// 📊 1. Retrieve all orders
 router.get('/all', (req, res) => {
     const query = "SELECT * FROM orders"; 
     db.all(query, [], (err, rows) => {
@@ -18,9 +17,7 @@ router.get('/all', (req, res) => {
     });
 });
 
-// ==========================================================================
-// 🆕 2. + බටන් එක එබුවම ඊළඟට එන POID එක දෙන API එක
-// ==========================================================================
+// 🆕 2. API to generate the next POID
 router.get('/next-poid', (req, res) => {
     db.get("SELECT POID FROM orders ORDER BY ROWID DESC LIMIT 1", (err, row) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -34,51 +31,46 @@ router.get('/next-poid', (req, res) => {
     });
 });
 
-// ==========================================================================
-// 🍏 3. Dropdown එක සඳහා Product_ID සහ Product_name ගන්නා API එක
-// ==========================================================================
+// 🍏 3. Products List API
 router.get('/products-list', (req, res) => {
-    // 💡 ඔයාගේ කෝඩ් එකට අනුව නිවැරදිම Column නම්: Product_ID, Product_name
-    const query = "SELECT Product_ID, Product_name FROM product"; 
+    const query = `
+        SELECT Product_ID, Product_name, Sell_Price, 'Unit' AS Type FROM product
+        UNION ALL
+        SELECT BulkProductID AS Product_ID, Product_name, Sell_Price, 'Bulk' AS Type FROM bulk_products
+    `; 
     
     db.all(query, [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
         
-        // Frontend එකේ code එකට ගැලපෙන්න map කරනවා
         const formattedProducts = rows.map(p => ({
-            productid: p.Product_ID,   // 👈 Product_ID එක productid විදිහට ගත්තා
-            name: p.Product_name       // 👈 Product_name එක name විදිහට ගත්තා
+            productid: p.Product_ID,   
+            name: p.Product_name,      
+            price: p.Sell_Price,       
+            Type: p.Type               
         }));
         
         res.json(formattedProducts);
     });
 });
 
-// ==========================================================================
-// 🚀 4. Send For Approval ක්ලික් කළ විට නව Order එකක් Insert කරන API එක
-// ==========================================================================
-// ==========================================================================
-// 🚀 4. Send For Approval ක්ලික් කළ විට නව Order එකක් Insert කරන API එක
-// ==========================================================================
+// 🚀 4. Send For Approval
 router.post('/add-request', (req, res) => {
     const { POID, ProductID, Name, Qty } = req.body;
     
-    // ✅ ශ්‍රී ලංකාවේ සැබෑ දිනය සහ වෙලාව (24hr) නිවැරදිව ලබා ගැනීම:
     const today = new Date();
-
-    // Output: YYYY-MM-DD (උදා: 2026-05-30)
     const currentDate = today.toLocaleDateString('en-CA', { timeZone: 'Asia/Colombo' }); 
-
-    // Output: HH:MM:SS (උදා: 14:30:15)
     const currentTime = today.toLocaleTimeString('en-GB', { timeZone: 'Asia/Colombo', hour12: false }); 
 
     const status = 'Approval Pending'; 
 
-    // (ඉතිරි කේතය සියල්ලම පෙර පරිදිම තිබෙන්න හැරිය හැක...)
-    const priceQuery = "SELECT Sell_Price FROM product WHERE Product_ID = ?";
+    let priceQuery = "SELECT Sell_Price FROM product WHERE Product_ID = ?";
+    if (ProductID && ProductID.toString().startsWith('B')) {
+        priceQuery = "SELECT Sell_Price FROM bulk_products WHERE BulkProductID = ?";
+    }
+
     db.get(priceQuery, [ProductID], (err, row) => {
         if (err) return res.status(500).json({ error: err.message });
-        if (!row) return res.status(404).json({ error: "Product not found" });
+        if (!row) return res.status(404).json({ error: "Product not found in database!" });
 
         const unitPrice = row.Sell_Price || 0;
         const total = unitPrice * Qty; 
@@ -94,9 +86,24 @@ router.post('/add-request', (req, res) => {
     });
 });
 
-// ==========================================================================
-// 🔄 5. Status එක Update කරන සහ Stock එක වැඩි කරන API එක
-// ==========================================================================
+// 🟢 5. API to edit both quantity and unit price and auto-calculate the total
+router.put('/update-qty-price', (req, res) => {
+    const { POID, newQty, unitPrice } = req.body;
+
+    if (!POID || !newQty || unitPrice === undefined) {
+        return res.status(400).json({ error: "POID, newQty, and unitPrice are required" });
+    }
+
+    const newTotal = parseFloat(unitPrice) * parseFloat(newQty);
+
+    const updateQuery = "UPDATE orders SET Qty = ?, Total = ? WHERE POID = ?";
+    db.run(updateQuery, [newQty, newTotal, POID], function(err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ success: true, message: "Order details updated successfully!" });
+    });
+});
+
+// 🔄 6. Status update and email trigger API
 router.put('/update-status', (req, res) => {
     const { POID, newStatus } = req.body;
 
@@ -104,41 +111,45 @@ router.put('/update-status', (req, res) => {
         return res.status(400).json({ error: "POID and newStatus are required" });
     }
 
-    // 1. මුලින්ම Orders ටේබල් එකේ Status එක Update කරමු
     const updateOrderQuery = "UPDATE orders SET Status = ? WHERE POID = ?";
     
     db.run(updateOrderQuery, [newStatus, POID], function(err) {
         if (err) return res.status(500).json({ error: err.message });
 
-        // 2. ඉදිරි පියවර කරන්නේ Status එක "Received" නම් පමණි
-        if (newStatus === 'Received') {
-            
-            // 3. මේ Order එකට අදාළ ProductID එක සහ Qty එක orders එකෙන් කියවා ගනිමු
-            const getOrderDetails = "SELECT ProductID, Qty FROM orders WHERE POID = ?";
-            
-            db.get(getOrderDetails, [POID], (err, orderRow) => {
-                if (err) return res.status(500).json({ error: err.message });
-                if (!orderRow) return res.status(404).json({ error: "Order not found" });
+        const getOrderDetails = "SELECT ProductID, Name, Qty FROM orders WHERE POID = ?";
+        
+        db.get(getOrderDetails, [POID], (err, orderRow) => {
+            if (err || !orderRow) return res.status(404).json({ error: "Order not found" });
 
-                const { ProductID, Qty } = orderRow;
+            const { ProductID, Name, Qty } = orderRow;
 
-                // 4. Product ටේබල් එකේ තියෙන Quantity එකට අලුත් Qty එක එකතු කරමු
-                // 💡 ඔයාගේ ඩේටාබේස් එකේ Column එක 'Quantity' ලෙස උපකල්පනය කර ඇත
-                const updateStockQuery = "UPDATE product SET Quantity = Quantity + ? WHERE Product_ID = ?";
+            if (newStatus === 'Approved') {
+                // 🟢 Here, 'ProductID' should be sent instead of 'Name' (this is required in SendEmailOrder.js to check for 'B' using prodId)
+                sendApprovalEmail(POID, ProductID);
+                return res.json({ success: true, message: `Order status updated to Approved and Email logic triggered.` });
+            }
+
+            if (newStatus === 'Received') {
+                let updateStockQuery = "UPDATE product SET Quantity = Quantity + ? WHERE Product_ID = ?";
+                if (ProductID && ProductID.toString().toUpperCase().startsWith('B')) {
+                    updateStockQuery = "UPDATE bulk_products SET Quantity = Quantity + ? WHERE BulkProductID = ?";
+                }
                 
                 db.run(updateStockQuery, [Qty, ProductID], function(err) {
                     if (err) return res.status(500).json({ error: err.message });
                     
+                    // 🟢 It is also appropriate to provide 'ProductID' here instead of 'Name'
+                    sendReceivedEmail(POID, ProductID);
+
                     return res.json({ 
                         success: true, 
-                        message: `Order set to Received and Stock updated successfully for Product: ${ProductID} (+${Qty})` 
+                        message: `Order set to Received, Stock updated (+${Qty}) and Email logic triggered.` 
                     });
                 });
-            });
-        } else {
-            // "Approved" හෝ "Cancel" නම් Stock වෙනස් නොකර මෙතනින් අවසන් වේ
-            return res.json({ success: true, message: `Order status updated to ${newStatus}` });
-        }
+            } else {
+                return res.json({ success: true, message: `Order status updated to ${newStatus}` });
+            }
+        });
     });
 });
 

@@ -12,7 +12,7 @@ function Suppliers() {
     const [searchTerm, setSearchTerm] = useState("");
     const [stats, setStats] = useState({ supplierStats: [], totalSuppliers: 0 });
     
-    // Sidebars සඳහා States
+    // State variables for sidebars
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [isEditOpen, setIsEditOpen] = useState(false);
     
@@ -20,16 +20,38 @@ function Suppliers() {
     const [selectedSupplier, setSelectedSupplier] = useState(null);
     const [formData, setFormData] = useState({ Name: '', Contact: '', Email: '' });
 
-// 1. fetchData function එක මෙතනින් ඉවර වෙනවා
-    const fetchData = () => {
-        // Suppliers ලැයිස්තුව ලබා ගැනීම
-        fetch('http://localhost:5000/api/get-suppliers-list')
-            .then(res => res.json())
-            .then(data => setSuppliers(data))
-            .catch(err => console.error(err));
+    // Helper function to create a common auth header
+    const getAuthHeaders = (extraHeaders = {}) => {
+        const username = sessionStorage.getItem('userName') || localStorage.getItem('userName') || '';
+        return {
+            'x-user-name': username,
+            ...extraHeaders
+        };
+    };
 
-        // මුළු සැපයුම්කරුවන් ගණන ලබා ගැනීම
-        fetch('http://localhost:5000/api/getsuppliercount')
+    // 1. fetchData function
+    const fetchData = () => {
+        // Fetch the suppliers list (with secure headers)
+        fetch('http://localhost:5000/api/get-suppliers-list', {
+            headers: getAuthHeaders()
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (Array.isArray(data)) {
+                    setSuppliers(data);
+                } else {
+                    setSuppliers([]);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                setSuppliers([]);
+            });
+
+        // Get the total number of suppliers
+        fetch('http://localhost:5000/api/getsuppliercount', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(data => setStats(prevStats => ({
                 ...prevStats,
@@ -37,24 +59,28 @@ function Suppliers() {
             })))
             .catch(err => console.error(err));
 
-        // Chart එකට අවශ්‍ය දත්ත ලබා ගැනීම (අලුත් URL එක)
-        fetch('http://localhost:5000/api/product-dashboard-stats')
+        // Fetch the data required for the chart
+        fetch('http://localhost:5000/api/product-dashboard-stats', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(data => setStats(prevStats => ({
                 ...prevStats,
                 supplierStats: data.supplierStats || [] 
             })))
             .catch(err => console.error(err));
-    }; // 👈 fetchData function එක මෙතනින් වැහෙනවා ({})
+    };
 
-    // 2. 💡 useEffect එක සාමාන්‍ය function එකෙන් එලියට අරන්, Component එක ඇතුලේ වෙනම ලිව්වා
+    // 2. useEffect runs separately within the component
     useEffect(() => { 
         fetchData(); 
     }, []);
 
-    // Add Sidebar විවෘත කිරීම
+    // Open the add sidebar
     const handleOpenAdd = () => {
-        fetch('http://localhost:5000/api/next-supplier-id')
+        fetch('http://localhost:5000/api/next-supplier-id', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(data => {
                 setNextSupId(data.nextSupplierId);
@@ -63,7 +89,7 @@ function Suppliers() {
             });
     };
 
-    // Edit Sidebar විවෘත කිරීම
+    // Open the edit sidebar
     const handleEditClick = (supplier) => {
         setSelectedSupplier(supplier);
         setFormData({ Name: supplier.Name, Contact: supplier.Contact, Email: supplier.Email });
@@ -75,7 +101,7 @@ function Suppliers() {
         const payload = { SupplierID: nextSupId, ...formData };
         fetch('http://localhost:5000/api/add-supplier', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify(payload)
         }).then(() => {
             setIsAddOpen(false);
@@ -87,7 +113,7 @@ function Suppliers() {
     const handleUpdateSubmit = () => {
         fetch(`http://localhost:5000/api/update-supplier/${selectedSupplier.SupplierID}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify(formData)
         }).then(() => {
             setIsEditOpen(false);
@@ -98,15 +124,20 @@ function Suppliers() {
     // Delete Logic
     const handleDelete = (id) => {
         if(window.confirm("Are you sure you want to delete this supplier?")) {
-            fetch(`http://localhost:5000/api/delete-supplier/${id}`, { method: 'DELETE' })
-                .then(() => fetchData());
+            fetch(`http://localhost:5000/api/delete-supplier/${id}`, { 
+                method: 'DELETE',
+                headers: getAuthHeaders()
+            })
+            .then(() => fetchData());
         }
     };
 
-    const filteredSuppliers = suppliers.filter(s => 
-        s.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        s.SupplierID?.toString().toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    const filteredSuppliers = Array.isArray(suppliers) 
+        ? suppliers.filter(s => 
+            s.Name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.SupplierID?.toString().toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : [];
 
     return (
         <div className="main-layout" style={{ backgroundImage: `url(${bgImage})` }}>
@@ -119,14 +150,25 @@ function Suppliers() {
                 <div className="stats-container fadeInRight">
                     <div className="glass-stat-card">
                         <h3>Suppliers</h3>
-                        <ResponsiveContainer width="100%" height={150}>
-                            <PieChart>
-                                <Pie data={stats.supplierStats} dataKey="count" nameKey="SupplierID" cx="50%" cy="50%" outerRadius={50}>
-                                    {stats.supplierStats.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
-                                </Pie>
-                                <Tooltip />
-                            </PieChart>
-                        </ResponsiveContainer>
+                        <div className="chart-container-box">
+                            <ResponsiveContainer width="100%" height={135}>
+                                <PieChart>
+                                    <Pie 
+                                        data={stats.supplierStats} 
+                                        dataKey="count" 
+                                        nameKey="SupplierID" 
+                                        cx="50%" 
+                                        cy="50%" 
+                                        outerRadius={50}
+                                    >
+                                        {(stats.supplierStats || []).map((entry, index) => (
+                                            <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
                     </div>
                     <div className="glass-stat-card total-box fadeInRight">
                         <h3>Total suppliers</h3>
@@ -156,24 +198,34 @@ function Suppliers() {
                         </div>
                     </div>
 
-                    <table className="modern-table">
-                        <thead>
-                            <tr>
-                                <th>Supplier ID</th><th>Name</th><th>Contact</th><th>Email</th><th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredSuppliers.map((s, index) => (
-                                <tr key={index}>
-                                    <td>{s.SupplierID}</td><td>{s.Name}</td><td>{s.Contact}</td><td>{s.Email}</td>
-                                    <td>
-                                        <button className="edit-btn-small" onClick={() => handleEditClick(s)}>Edit</button>
-                                        <button className="delete-btn-small" onClick={() => handleDelete(s.SupplierID)}>Delete</button>
-                                    </td>
+                    <div className="supp-table-wrapper">
+                        <table className="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Supplier ID</th><th>Name</th><th>Contact</th><th>Email</th><th>Actions</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {filteredSuppliers.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="5" style={{ textAlign: 'center', color: '#999', padding: '30px' }}>
+                                            No suppliers found
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    filteredSuppliers.map((s, index) => (
+                                        <tr key={index}>
+                                            <td>{s.SupplierID}</td><td>{s.Name}</td><td>{s.Contact}</td><td>{s.Email}</td>
+                                            <td>
+                                                <button className="edit-btn-small" onClick={() => handleEditClick(s)}>Edit</button>
+                                                <button className="delete-btn-small" onClick={() => handleDelete(s.SupplierID)}>Delete</button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
                 {/* Add Supplier Sidebar */}

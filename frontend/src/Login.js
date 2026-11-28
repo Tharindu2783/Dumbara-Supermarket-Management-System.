@@ -1,3 +1,4 @@
+// frontend/src/Login.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import './Login.css';
@@ -9,10 +10,21 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [users, setUsers] = useState([]);
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const navigate = useNavigate(); 
 
-  // Database එකෙන් users ගෙන්වා ගැනීම
-  useEffect(() => {
+  const [loading, setLoading] = useState(false);
+  const [loaderText, setLoaderText] = useState('VERIFYING CREDENTIALS...');
+  
+  const [loginError, setLoginError] = useState('');
+  const [forgotFinished, setForgotFinished] = useState(false);
+  const [forgotError, setForgotError] = useState('');
+
+useEffect(() => {
+
+    sessionStorage.clear();
+    localStorage.clear();
+
     fetch('http://localhost:5000/api/users')
       .then(res => res.json())
       .then(data => setUsers(data))
@@ -21,8 +33,14 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setLoginError('');
+    setLoaderText('VERIFYING CREDENTIALS...'); 
+    setLoading(true);
+
+
+    sessionStorage.clear();
+    localStorage.clear();
     
-    // Backend එකේ අපි හදපු /api/login එකට දත්ත යවනවා POST request එකක් විදිහට
     fetch('http://localhost:5000/api/login', {
       method: 'POST',
       headers: {
@@ -38,30 +56,63 @@ function Login() {
     })
     .then(data => {
       if (data.success) {
-        console.log("Login Success:", data);
-
-        /* 👑 USER ROLE එක හඳුනාගෙන LOCALSTORAGE එකේ SAVE කිරීම */
-        let userRole = 'Assistant'; // Default අගය
-
-        if (data.role) {
-          // 1. Backend එකෙන් කෙලින්ම role එකක් එවනවා නම් ඒක ගනී
-          userRole = data.role;
-        } else if (username.toLowerCase().includes('manager') || username.toLowerCase().includes('admin')) {
-          // 2. නැත්නම් Select කරපු Username එක අනුව Manager ද කියා බලයි
-          userRole = 'Manager';
-        }
-
-        // හඳුනාගත් Role එක LocalStorage එකට ඇතුළත් කරයි
-        localStorage.setItem('userRole', userRole);
+        setLoaderText('LOADING DASHBOARD SYSTEM...'); 
         
-        // 🚀 සාර්ථකයි නම් කෙලින්ම Dashboard පිටුවට රීඩිරෙක්ට් කරනවා!
-        navigate('/dashboard'); 
+        const userRole = data.role || 'Assistant';
+        sessionStorage.setItem('userRole', userRole);
+        sessionStorage.setItem('userName', username);
+        sessionStorage.setItem('isTemporary', data.isTemporary); 
+        
+        setTimeout(() => {
+          setLoading(false);
+          navigate('/dashboard'); 
+        }, 1200); 
       }
     })
     .catch(err => {
       console.error("Login Attempt Failed:", err);
-      alert("❌ වැරදි මුරපදයක් (Password) හෝ පරිශීලක නාමයක්! කරුණාකර නැවත උත්සාහ කරන්න.");
+      setLoading(false);
+      setLoginError("❌ Access Denied: Invalid username or password. Please try again.");
     });
+  };
+
+  const handleForgotPassword = () => {
+    if (!username) {
+      setForgotError("⚠️ Please type or select a User Name first!");
+      return;
+    }
+
+    setForgotError('');
+    setLoaderText('SENDING TEMPORARY PASSWORD...'); 
+    setLoading(true);
+
+    fetch('http://localhost:5000/api/forgot-password', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ username }),
+    })
+    .then(res => res.json())
+    .then(data => {
+      setLoading(false);
+      if (data.success) {
+        setForgotFinished(true); 
+      } else {
+        setForgotError(`❌ Error: ${data.message}`);
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      setLoading(false);
+      setForgotError("❌ Communication Failed: Check your backend server connections.");
+    });
+  };
+
+  const handleCloseForgotModal = () => {
+    setShowForgotModal(false);
+    setForgotFinished(false);
+    setForgotError('');
   };
 
   return (
@@ -75,27 +126,45 @@ function Login() {
 
       <div className="login-right">
         <div className="chart-overlay" style={{ backgroundImage: `url(${dataAnalyticsBg})` }}></div>
-        <div className="glass-card fadeInRight">
+        
+        <div className="mobile-brand-header">
+          <h1>DUMBARA</h1>
+          <p>SUPER MARKET</p>
+        </div>
+
+        <div className="glass-card fadeInRight" style={{ position: 'relative' }}>
+          
+          {loading && !showForgotModal && (
+            <div className="login-glass-loader">
+              <div className="modern-login-spinner"></div>
+              <div className="loader-login-text">{loaderText}</div>
+            </div>
+          )}
+
           <h2>Welcome</h2>
+          
+          {loginError && <div className="login-error-alert">{loginError}</div>}
+
           <form className="login-form" onSubmit={handleSubmit}>
-            
             <div className="input-group">
               <label>Select User Name</label>
               <div className="select-wrapper">
-                <select 
+                <input
+                  type="text"
                   className="modern-select"
+                  placeholder="Type or select user name"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  list="usernames-list"
                   required
-                >
-                  <option value="" disabled>Select user name</option>
+                  autoComplete="off"
+                  disabled={loading}
+                />
+                <datalist id="usernames-list">
                   {users.map((user, index) => (
-                    <option key={index} value={user.UserName} className="option-item">
-                      {user.UserName}
-                    </option>
+                    <option key={index} value={user.UserName} />
                   ))}
-                </select>
-                <div className="select-arrow"></div>
+                </datalist>
               </div>
             </div>
 
@@ -107,13 +176,68 @@ function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                disabled={loading}
               />
             </div>
 
-            <button type="submit" className="login-button">Login Now</button>
+            <button type="submit" className="login-button" disabled={loading}>Login Now</button>
+            
+            <div className="forgot-password-wrapper">
+              <span className="forgot-password-link" onClick={() => { if(!loading) setShowForgotModal(true); }}>
+                Forgot Password?
+              </span>
+            </div>
           </form>
         </div>
       </div>
+
+      {showForgotModal && (
+        <div className="forgot-modal-overlay">
+          <div className="forgot-modal-card" style={{ position: 'relative' }}>
+            
+            {loading && (
+              <div className="forgot-glass-loader">
+                <div className="modern-login-spinner"></div>
+                <div className="loader-login-text">{loaderText}</div>
+              </div>
+            )}
+
+            {forgotFinished ? (
+              <div style={{ padding: '10px 0' }}>
+                <div className="modal-icon" style={{ fontSize: '3rem' }}>✅</div>
+                <h3 style={{ color: '#2ecc71' }}>Email Dispatched!</h3>
+                <p style={{ marginTop: '10px', fontSize: '0.95rem', color: '#eee' }}>
+                  A secure temporary access password has been successfully sent to the registered email address of <b>"{username}"</b>.
+                </p>
+                <button className="modal-btn-confirm" style={{ width: '100%', marginTop: '15px' }} onClick={handleCloseForgotModal}>
+                  Return to Login Screen
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="modal-icon">🔐</div>
+                <h3>Reset Password</h3>
+                
+                {forgotError && <div className="login-error-alert" style={{ borderRadius: '10px', fontSize: '0.85rem' }}>{forgotError}</div>}
+                
+                <p>
+                  {username ? (
+                    <>Do you want to dispatch a secure Temporary Password Code to the registered email of user <b>"{username}"</b>?</>
+                  ) : (
+                    "Please close this window and input or select your User Name on the main form first."
+                  )}
+                </p>
+                <div className="modal-buttons">
+                  {username && (
+                    <button className="modal-btn-confirm" onClick={handleForgotPassword} disabled={loading}>Yes, Send Code</button>
+                  )}
+                  <button className="modal-btn-cancel" onClick={handleCloseForgotModal} disabled={loading}>Cancel</button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./app.db');
 
 router.get('/get-suppliers-list', (req, res) => {
-    // සැපයුම්කරුවන්ගේ සියලුම තොරතුරු ලබා ගැනීම
+    // Retrieve all supplier information
     const query = `SELECT SupplierID, Name, Contact, Email FROM supplier`;
     
     db.all(query, [], (err, rows) => {

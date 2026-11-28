@@ -6,18 +6,18 @@ const fs = require('fs');
 const PDFDocument = require('pdfkit');
 const ChartJSImage = require('chart.js-image');
 
-// app.db එකට සම්බන්ධ වීම
+// Connect to app.db
 const dbPath = path.join(__dirname, '../app.db');
 const db = new sqlite3.Database(dbPath);
 
-// report ෆෝල්ඩරයේ path එක
+// Path to the report folder
 const reportFolder = path.join(__dirname, '../report');
 
 if (!fs.existsSync(reportFolder)) {
     fs.mkdirSync(reportFolder, { recursive: true });
 }
 
-// POST API - Sales Report එක සාදා PDF එක Folder එකට සේව් කර බ්‍රව්සර් එකටද ලබාදීම
+// POST API - Create a sales report, save the PDF in the report folder, and provide it to the browser
 router.post('/generate-sales-report', async (req, res) => {
     const { ReportID, ReportType, FromDate, ToDate } = req.body;
 
@@ -40,7 +40,7 @@ router.post('/generate-sales-report', async (req, res) => {
         }
 
         try {
-            // 📊 1. Chart.js-Image මඟින් Bar Graph එක සෑදීම
+            // 📊 1. Create a bar graph using Chart.js-Image
             const labels = rows.map(r => r.Date);
             const dataValues = rows.map(r => r.DailyTotal);
             const totalSalesSum = dataValues.reduce((a, b) => a + b, 0);
@@ -67,19 +67,19 @@ router.post('/generate-sales-report', async (req, res) => {
 
             const chartBuffer = await chart.toBuffer();
 
-            // 📄 2. PDFKit මඟින් PDF එක නිර්මාණය කිරීම
+            // 📄 2. Create the PDF using PDFKit
             const doc = new PDFDocument({ margin: 50 });
 
-            // 💾 3. PDF එක backend/report ෆෝල්ඩරය ඇතුළත සේව් කිරීමට File Stream එකක් සෑදීම
+            // 💾 3. Create a file stream to save the PDF inside the backend/report folder
             const pdfFileName = `${ReportID}_Sales_Report.pdf`;
             const pdfFilePath = path.join(reportFolder, pdfFileName);
             const fileStream = fs.createWriteStream(pdfFilePath);
             
-            doc.pipe(fileStream); // ෆෝල්ඩරයට සේව් වේ
+            doc.pipe(fileStream); // Save to the folder
             
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', `attachment; filename=${pdfFileName}`);
-            doc.pipe(res); // Frontend එකට download වීමට යැවේ
+            doc.pipe(res); // Send to the frontend for download
 
             // Dumbara Supermarket Header
             doc.fontSize(28).text('Dumbara Supermarket', { align: 'center' }).moveDown(1);
@@ -107,10 +107,10 @@ router.post('/generate-sales-report', async (req, res) => {
             doc.font('Helvetica-Bold').fontSize(14);
             doc.text(`Total Sales : Rs. ${totalSalesSum.toFixed(2)}`, 100, doc.y).moveDown(1.5);
 
-            // Bar Chart එක එකතු කිරීම
+            // Add the bar chart
             doc.image(chartBuffer, 60, doc.y, { width: 480 });
 
-            // 💾 4. Report Table එකට දත්ත ඇතුළත් කිරීම (doc.end එකට කලින් ලියා ඇත)
+            // 💾 4. Insert report data into the Report table before the document ends
             const today = new Date();
             const currentDate = today.toLocaleDateString('en-CA', { timeZone: 'Asia/Colombo' }); 
             const currentTime = today.toLocaleTimeString('en-GB', { timeZone: 'Asia/Colombo', hour12: false });
@@ -124,7 +124,7 @@ router.post('/generate-sales-report', async (req, res) => {
                 }
             });
 
-            doc.end(); // 👈 PDF එක ලියා අවසන් කර Response එක ක්ලෝස් කරන්නේ ඩේටාබේස් එකට විස්තර යැවූ පසුවයි.
+            doc.end(); // Finish writing the PDF and close the response after the database details are sent
 
         } catch (chartError) {
             console.error("Chart generation error:", chartError);

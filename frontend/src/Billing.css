@@ -6,16 +6,17 @@
     background-size: cover;
     background-position: center;
     display: flex;
+    overflow-x: hidden;
 }
 
-/* Suppliers එකේ වගේම Manager Icon එක දකුණටම සිරස්ව පිහිටුවීමට flexbox සහ flex-direction යෙදුවා */
 .billing-content {
     flex: 1;
     padding: 20px;
-    margin-left: 250px; /* Sidebar offset */
+    margin-left: 250px; /* Desktop Sidebar offset */
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
 }
 
 /* ==========================================================================
@@ -41,6 +42,7 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+    box-sizing: border-box;
 }
 
 .billing-glass-card h3, .card-title { 
@@ -77,6 +79,8 @@
     border-radius: 25px;
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    width: 100%;
 }
 
 /* Form Styles */
@@ -90,6 +94,7 @@
     background: #f9f9f9;
     font-size: 1rem;
     outline: none;
+    box-sizing: border-box;
 }
 
 .billing-payment-box {
@@ -120,6 +125,7 @@
     cursor: pointer;
     transition: 0.3s;
     margin-bottom: 15px;
+    box-sizing: border-box;
 }
 
 .billing-add-item-btn, .billing-pay-btn {
@@ -141,6 +147,11 @@
 
 /* Table Section */
 .table-title { margin-bottom: 20px; font-size: 1.3rem; }
+
+.bill-table-wrapper {
+    width: 100%;
+    overflow-x: auto; /* If the table becomes too wide, only the table scrolls horizontally instead of breaking the layout */
+}
 
 .billing-modern-table {
     width: 100%;
@@ -195,7 +206,6 @@
     to { opacity: 1; transform: translateX(0); }
 }
 
-
 /* 🔍 Billing Search Suggestions Dropdown Styles */
 .billing-suggestions-dropdown {
     position: absolute;
@@ -238,7 +248,6 @@
     text-transform: uppercase;
 }
 
-/* Bulk බඩු වලට කහ පාට සහ සාමාන්‍ය බඩු වලට නිල් පාට බේජ් එකක් */
 .billing-suggestions-dropdown li .badge.bulk {
     background-color: #ffc107;
     color: #000;
@@ -259,17 +268,15 @@
     color: #28a745;
 }
 
-/* ==========================================================================
-   🔍 NEW GLASS-EFFECT SUGGESTIONS DROPDOWN (LIGHT THEME MATCHED)
-   ========================================================================== */
+/* Dropdown */
 .billing-custom-dropdown {
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
-    background: rgba(255, 255, 255, 0.95); /* සුදු පැහැති පිරිසිදු පසුබිම */
-    backdrop-filter: blur(10px); /* මදක් වීදුරු ස්වභාවයක් ලබා දීමට */
-    border: 1.5px solid #2ecc71; /* Input field එකේ බෝඩර් එකටම ගැලපෙන කොළ පැහැය */
+    background: rgba(255, 255, 255, 0.95); 
+    backdrop-filter: blur(10px); 
+    border: 1.5px solid #2ecc71; 
     border-top: none;
     max-height: 220px;
     overflow-y: auto;
@@ -277,52 +284,46 @@
     list-style: none;
     margin: 4px 0 0 0;
     padding: 5px 0;
-    border-radius: 12px; /* වටකුරු මෘදු හැඩය */
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); /* සැහැල්ලු Shadow එකක් */
+    border-radius: 12px; 
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15); 
 }
 
-/* ඩ්‍රොප්ඩවුන් එක ඇතුළේ තියෙන Row එකක් */
 .dropdown-item-row {
     padding: 12px 18px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #333333; /* කියවීමට පහසු තද අළු පැහැති අකුරු */
+    color: #333333; 
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
     font-size: 0.95rem;
 }
 
-/* 💡 ප්‍රඩක්ට් එකේ නම */
 .prod-name-span {
     font-weight: 600;
     color: #2c3e50;
 }
 
-/* 💡 ප්‍රඩක්ට් එකේ මිල (කැපී පෙනෙන ලස්සන පැහැයකින්) */
 .prod-price-span {
     font-weight: 700;
-    color: #e67e22; /* ලස්සන තැඹිලි/කහ පැහැති කැපී පෙනෙන මිලක් */
-    background: rgba(230, 126, 34, 0.1); /* මිල වටා ලස්සන බබල් එකක් */
+    color: #e67e22; 
+    background: rgba(230, 126, 34, 0.1); 
     padding: 4px 10px;
     border-radius: 8px;
     font-size: 0.9rem;
 }
 
-/* 🖱️ Row එකක් උඩට මවුස් එක ගෙනිච්චම හෝ සිලෙක්ට් වෙද්දී */
 .dropdown-item-row:hover {
-    background-color: #2ecc71; /* තේම් එකට ගැලපෙන Dumbara Green පැහැය */
-    color: #ffffff; /* අකුරු සුදු පැහැයට හැරේ */
+    background-color: #2ecc71; 
+    color: #ffffff; 
 }
 
-/* Row එක hover වෙද්දී මිල පෙන්වන බබල් එකේ වර්ණ මාරු වීම */
 .dropdown-item-row:hover .prod-price-span {
     color: #ffffff;
     background: rgba(255, 255, 255, 0.25);
 }
 
-/* Scrollbar එකත් සිස්ටම් එකටම ගැලපෙන්න ලස්සන කිරීම */
 .billing-custom-dropdown::-webkit-scrollbar {
     width: 6px;
 }
@@ -334,26 +335,7 @@
     background: rgba(0, 0, 0, 0.02);
 }
 
-.dropdown-item-row:hover {
-    background-color: #00e676; /* සිලෙක්ට් වෙද්දී කොළ පාට */
-    color: #000;
-}
-
-.prod-name-span {
-    font-weight: 500;
-}
-
-.prod-price-span {
-    font-size: 0.9rem;
-    opacity: 0.8;
-}
-
-
-/* ==========================================================================
-   ⚖️ BULK QTY FIELD WITH SELECT UNIT ALIGNMENT
-   ========================================================================== */
-
-/* Input එක සහ Select එක බාහිරින් එකම මට්ටමක තබා ගැනීමට */
+/* Bulk Qty Container */
 .billing-qty-container {
     display: flex;
     gap: 10px;
@@ -361,11 +343,10 @@
     align-items: center;
 }
 
-/* Kg / g Select Dropdown එක අනිත් Fields වල හැඩයටම සැකසීම */
 .billing-unit-select {
     width: 90px;
-    padding: 14px 5px; /* අනිත් fields වල උසටම සමාන padding එකක් */
-    border-radius: 15px; /* එකම වටකුරු හැඩය */
+    padding: 14px 5px; 
+    border-radius: 15px; 
     border: 1.5px solid #2ecc71;
     background: #f9f9f9;
     font-size: 1rem;
@@ -374,5 +355,55 @@
     outline: none;
     cursor: pointer;
     box-sizing: border-box;
-    height: 52px; /* උස නියමිතව තැබීමට (14px padding + font size සමඟ) */
+    height: 52px; 
+}
+
+/* ==========================================================================
+   📱 MOBILE RESPONSIVE MEDIA QUERY (ONLY WORKS FOR MOBILE / TABLET)
+   ========================================================================== */
+@media screen and (max-width: 1024px) {
+    .billing-content {
+        margin-left: 0 !important;
+        width: 100% !important;
+        padding: 10px !important;
+        padding-top: 65px !important;
+        box-sizing: border-box !important;
+    }
+
+    .billing-stats-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+    }
+
+    /* 📱 On mobile, the card width becomes 100% and stays within the screen */
+    .billing-glass-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+    }
+
+    .billing-main-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+        width: 100% !important;
+    }
+
+    .glass-effect {
+        padding: 15px !important;
+        border-radius: 18px !important;
+        box-sizing: border-box !important;
+    }
+
+    .stat-number {
+        font-size: 2.8rem !important;
+    }
+
+    .billing-modern-table th, 
+    .billing-modern-table td {
+        padding: 8px 6px !important;
+        font-size: 0.85rem !important;
+    }
 }

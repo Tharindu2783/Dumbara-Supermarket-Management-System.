@@ -3,7 +3,7 @@ const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./app.db');
 
-// Supplier Update korar API
+// Supplier update API
 router.put('/update-supplier/:id', (req, res) => {
     const { Name, Contact, Email } = req.body;
     const id = req.params.id;
@@ -15,7 +15,7 @@ router.put('/update-supplier/:id', (req, res) => {
     });
 });
 
-// Supplier Delete korar API
+// Supplier delete API
 router.delete('/delete-supplier/:id', (req, res) => {
     const id = req.params.id;
     db.run("DELETE FROM supplier WHERE SupplierID = ?", id, (err) => {
@@ -31,7 +31,7 @@ router.get('/getsuppliercount', (req, res) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         }
-        // මුළු ගණන totalSuppliers ලෙස රිටර්න් කරයි
+        // Return the total count as totalSuppliers
         res.json({ totalSuppliers: row.total || 0 });
     });
 });

@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./app.db');
 
 router.get('/next-product-id', (req, res) => {
-    // Product_ID එකෙන් අවසන් අගය ලබා ගැනීම
+    // Retrieve the last value from Product_ID
     const query = "SELECT Product_ID FROM product ORDER BY Product_ID DESC LIMIT 1";
     
     db.get(query, [], (err, row) => {

@@ -1,4 +1,5 @@
-﻿const express = require('express');
+﻿// backend/server.js
+const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
@@ -7,12 +8,29 @@ const app = express();
 
 app.use(cors());
 
-// 💡 වෙනස්කම: PDF Base64 සහ අනෙකුත් විශාල JSON දත්ත පැමිණීමේදී Payload Too Large Error එක මඟහරවා ගැනීමට limit එක වැඩි කරන ලදී.
+// 💡 Payload limit configuration for PDF Base64 & large JSON data
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // ==========================================
-// 📥 ROUTES IMPORT කිරීම (REQUIRE) SECTION
+// 🛡️ MIDDLEWARE IMPORT
+// ==========================================
+const verifyToken = require('./middleware/verifyToken'); 
+
+// Optional Role Guard Middleware Helper
+const requireRole = (...allowedRoles) => {
+    return (req, res, next) => {
+        if (!req.userRole || !allowedRoles.includes(req.userRole)) {
+            return res.status(403).json({ 
+                message: `Access Denied: Requires one of these roles: ${allowedRoles.join(', ')}` 
+            });
+        }
+        next();
+    };
+};
+
+// ==========================================
+// 📥 ROUTES IMPORT (REQUIRE) SECTION
 // ==========================================
 const dashboardRoute = require('./routes/dashboardRoute.js');
 const billingRoutes = require('./routes/billingRoutes');
@@ -26,7 +44,7 @@ const productActionsRoute = require('./routes/productActions.js');
 const getsuppliersRoute = require('./routes/getsuppliers.js');
 const getSupplierIDRoute = require('./routes/getsupplierID.js'); 
 const addSupplierRoute = require('./routes/addsupplier.js'); 
-const supplierActionsRoute = require('./routes/supplierActions.js');  
+const supplierActionsRoute = require('./routes/supplierActions.js');   
 const saveBillRoute = require('./routes/saveBill.js');
 const getINVtabledata = require('./routes/getINVtabledata');
 const deleteInvoiceRoute = require('./routes/deleteInvoice');
@@ -36,48 +54,74 @@ const setREPID = require('./routes/setREPID.js');
 const updateReportTable = require('./routes/updateReportTable.js');
 const deleteReportRoute = require('./routes/deleteReport.js');
 const orderReqRoutes = require('./routes/OrderReqRoutes');
-const sendEmailOrderRoute = require('./routes/SendEmailOrder');
 const createProfitReport = require('./routes/createProfitReport.js'); 
-
-// 🤖 අලුතින් එකතු කළ AI Chatbot Route එක
+const viewInvoiceRouter = require('./routes/viewinvoice'); 
 const chatbotRoute = require('./routes/Chatbot.js'); 
+const aprioriRoutes = require('./routes/aprioriRoutes.js'); 
+const competitorRoutes = require('./routes/competitorRoutes.js');
 
 // ==========================================
-// ⚙️ EXPRESS APP middleware & ROUTES USAGE
+// ⚙️ EXPRESS APP MIDDLEWARE & ROUTES USAGE
 // ==========================================
-app.use('/invoice', express.static(path.join(__dirname, 'invoice')));
-app.use('/report', express.static(path.join(__dirname, 'report')));
 
-app.use('/api', dashboardRoute);
-app.use('/api', productRoutes);
-app.use('/api', billingRoutes);
-app.use('/api', addinvoice);
+// 🔓 Public Routes (can be used without logging in)
 app.use('/api', userRoutes);
-app.use('/api', productIdRoute);
-app.use('/api', productSupplierRoute);
-app.use('/api', addProductRoute);
-app.use('/api', productActionsRoute);
-app.use('/api', getsuppliersRoute);
-app.use('/api', getSupplierIDRoute);
-app.use('/api', addSupplierRoute);
-app.use('/api', supplierActionsRoute);
-app.use('/api', saveBillRoute);
-app.use('/api', getINVtabledata);
-app.use('/api', deleteInvoiceRoute);
-app.use('/api', setreportyear);
-app.use('/api', createsalesreport);
-app.use('/api', setREPID);
-app.use('/api', updateReportTable);
-app.use('/api', deleteReportRoute);
-app.use('/api', createProfitReport); 
-app.use('/api/orders', orderReqRoutes);
-app.use('/api/email-orders', sendEmailOrderRoute);
+app.use('/api', chatbotRoute);
+app.use('/api', aprioriRoutes); 
 
-// 🤖 AI Chatbot එක සඳහා Endpoint එක සක්‍රීය කිරීම
-app.use('/api', chatbotRoute); // මෙය මඟින් http://localhost:5000/api/chat සක්‍රීය වේ
+// 🔒 Protected API Routes (only work when logged in and pass through verifyToken)
+app.use('/api', verifyToken, dashboardRoute);
+app.use('/api', verifyToken, productRoutes);
+app.use('/api', verifyToken, billingRoutes);
+app.use('/api', verifyToken, addinvoice);
+app.use('/api', verifyToken, productIdRoute);
+app.use('/api', verifyToken, productSupplierRoute);
+app.use('/api', verifyToken, addProductRoute);
+app.use('/api', verifyToken, productActionsRoute);
+app.use('/api', verifyToken, getsuppliersRoute);
+app.use('/api', verifyToken, getSupplierIDRoute);
+app.use('/api', verifyToken, addSupplierRoute);
+app.use('/api', verifyToken, supplierActionsRoute);
+app.use('/api', verifyToken, saveBillRoute);
+app.use('/api', verifyToken, getINVtabledata);
+app.use('/api', verifyToken, deleteInvoiceRoute);
+app.use('/api', verifyToken, setreportyear);
+app.use('/api', verifyToken, createsalesreport);
+app.use('/api', verifyToken, setREPID);
+app.use('/api', verifyToken, updateReportTable);
+app.use('/api', verifyToken, deleteReportRoute);
+app.use('/api', verifyToken, createProfitReport); 
+app.use('/api/orders', verifyToken, orderReqRoutes);
+app.use('/api', viewInvoiceRouter);
+app.use('/api', competitorRoutes);
+
+// ==========================================
+// 🔒 FILE STREAMING ENDPOINTS
+// ==========================================
+app.get('/api/invoice/:filename', verifyToken, (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, 'invoice', filename);
+
+    if (fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+    } else {
+        res.status(404).json({ error: "Invoice file not found" });
+    }
+});
+
+app.get('/api/report/:filename', verifyToken, (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(__dirname, 'report', filename);
+
+    if (fs.existsSync(filePath)) {
+        res.sendFile(filePath);
+    } else {
+        res.status(404).json({ error: "Report file not found" });
+    }
+});
 
 app.get('/', (req, res) => {
-    res.send('Backend is working with separate routes999999999');
+    res.send('Backend is working securely with RBAC routes!');
 });
 
 const PORT = 5000;

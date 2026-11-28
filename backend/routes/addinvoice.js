@@ -3,7 +3,7 @@ const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('./app.db');
 
-// 1. ඊළඟ Invoice ID එක ගණනය කිරීම
+// 1. Calculate the next invoice ID
 router.get('/next-invoice-id', (req, res) => {
     const query = "SELECT InvoiceID FROM Invoice ORDER BY CAST(SUBSTR(InvoiceID, 4) AS INTEGER) DESC LIMIT 1";
     
@@ -15,27 +15,27 @@ router.get('/next-invoice-id', (req, res) => {
             const nextID = `INV${currentNumber + 1}`;
             res.json({ nextInvoiceId: nextID });
         } else {
-            res.json({ nextInvoiceId: 'INV1' }); // Database එක හිස් නම් INV1 ලබාදේ
+            res.json({ nextInvoiceId: 'INV1' }); // If the database is empty, return INV1
         }
     });
 });
 
-// 2. අලුත් Invoice එකක් සහ එහි අයිතමයන් ටේබල් දෙකටම ඇතුළත් කිරීම
+// 2. Add a new invoice and its items to both tables
 router.post('/add-invoice', (req, res) => {
     const { 
         InvoiceID, Product_Qty, Total, Profit, Date, Time, 
         ProductList, ProductNameList, CountList 
     } = req.body;
     
-    // SQL Queries දෙක ලියා ගැනීම
+    // Prepare the two SQL queries
     const insertInvoiceQuery = `INSERT INTO Invoice (InvoiceID, Product_Qty, Total, Profit, Date, Time) VALUES (?, ?, ?, ?, ?, ?)`;
     const insertProductsQuery = `INSERT INTO invoice_products (INVID, ProductList, ProductNameList, CountList, Date, Time) VALUES (?, ?, ?, ?, ?, ?)`;
 
-    // 💡 ටේබල් දෙකටම එකවර ආරක්ෂිතව දත්ත ඇතුළත් කිරීම
+    // 💡 Save data safely to both tables at once
     db.serialize(() => {
         let hasError = false;
 
-        // 🛑 (A) පළමුව Invoice ටේබල් එකට දත්ත දැමීම
+        // 🛑 (A) First save the data to the Invoice table
         db.run(insertInvoiceQuery, [InvoiceID, Product_Qty, Total, Profit, Date, Time], (err) => {
             if (err) {
                 hasError = true;
@@ -44,18 +44,18 @@ router.post('/add-invoice', (req, res) => {
             }
         });
 
-        // 🛑 (B) දෙවනුව ඔයා හදපු invoice_products ටේබල් එකට දත්ත දැමීම
+        // 🛑 (B) Then save the data to the invoice_products table
         db.run(insertProductsQuery, [InvoiceID, ProductList, ProductNameList, CountList, Date, Time], (err) => {
             if (err) {
                 hasError = true;
                 console.error("❌ Error saving to invoice_products table:", err.message);
-                // මුල් එක සේව් වෙලා මේක ෆේල් වුණොත් දැනුම් දීම
+                // If the first save succeeded but this one failed, notify the client
                 if (!res.headersSent) {
                     return res.status(500).json({ success: false, message: "invoice_products table error: " + err.message });
                 }
             }
 
-            // ටේබල් දෙකටම සාර්ථකව සේව් වුණා නම් Response එක යැවීම
+            // Send a response if both tables were saved successfully
             if (!hasError && !res.headersSent) {
                 res.json({ success: true, message: "All invoice details saved successfully to both tables!" });
             }

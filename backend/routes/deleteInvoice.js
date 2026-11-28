@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 
-// 💡 '.db' ගොනුව කෙලින්ම require කරන්නේ නැතිව sqlite3 හරහා සම්බන්ධතාවය (Connection) ගොඩනැගීම
+// 💡 Create the database connection through sqlite3 instead of requiring the '.db' file directly
 const dbPath = path.join(__dirname, '../app.db'); 
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
@@ -14,11 +14,11 @@ const db = new sqlite3.Database(dbPath, (err) => {
     }
 });
 
-// 💡 server.js එකේ app.use('/api', ...) දාලා තියෙන නිසා මෙතනට '/delete-invoice/:id' පමණක් යොදයි
+// 💡 Since app.use('/api', ...) is already defined in server.js, only '/delete-invoice/:id' is added here
 router.delete('/delete-invoice/:id', (req, res) => {
     const invoiceId = req.params.id;
 
-    // 1. Database එකෙන් අදාළ Invoice record එක සදහටම මකා දැමීම
+    // 1. Permanently delete the relevant invoice record from the database
     const sql = `DELETE FROM Invoice WHERE InvoiceID = ?`;
     
     db.run(sql, [invoiceId], function (err) {
@@ -27,13 +27,13 @@ router.delete('/delete-invoice/:id', (req, res) => {
             return res.status(500).json({ success: false, message: "Database delete failed" });
         }
 
-        // 2. Database එකෙන් මැකුණු පසු 'backend/invoice/' folder එකේ ඇති PDF එකේ path එක සෙවීම
+        // 2. After deleting the record from the database, locate the PDF file path in the 'backend/invoice/' folder
         const pdfPath = path.join(__dirname, '../invoice', `${invoiceId}.pdf`);
 
-        // 3. එම ස්ථානයේ PDF file එකක් තිබේදැයි පරීක්ෂා කර එය මකා දැමීම
+        // 3. Check whether a PDF file exists at that location and delete it
         fs.access(pdfPath, fs.constants.F_OK, (fsErr) => {
             if (!fsErr) {
-                // File එක තිබේ නම් එය මකා දමයි (unlink)
+                // If the file exists, delete it (unlink)
                 fs.unlink(pdfPath, (unlinkErr) => {
                     if (unlinkErr) {
                         console.error("Error deleting PDF file from folder:", unlinkErr);
@@ -46,7 +46,7 @@ router.delete('/delete-invoice/:id', (req, res) => {
             }
         });
 
-        // Frontend එකට සාර්ථක වූ බව පණිවිඩයක් යැවීම
+        // Send a success message to the frontend
         res.json({ success: true, message: "Invoice record and PDF file deleted successfully" });
     });
 });

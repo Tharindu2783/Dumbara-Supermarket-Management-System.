@@ -9,6 +9,10 @@ function Report() {
     const [searchTerm, setSearchTerm] = useState('');
     const [isAddReportOpen, setIsAddReportOpen] = useState(false);
 
+    // 📄 Pagination States
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     // Form States
     const [nextReportID, setNextReportID] = useState('REP1');
     const [reportType, setReportType] = useState('Sales Report');
@@ -23,48 +27,86 @@ function Report() {
     const [toMonth, setToMonth] = useState('Jan');
     const [toDate, setToDate] = useState('01');
 
+    // Report Generating Loader State
+    const [isGenerating, setIsGenerating] = useState(false);
+
     const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     const days = Array.from({ length: 31 }, (_, i) => String(i + 1).padStart(2, '0'));
 
-    // Reports දත්ත ලබාගැනීම
+    // Auth Header Helper
+    const getAuthHeaders = (extraHeaders = {}) => {
+        const username = sessionStorage.getItem('userName') || localStorage.getItem('userName') || '';
+        return {
+            'x-user-name': username,
+            ...extraHeaders
+        };
+    };
+
+    // Fetch report data
     const fetchReports = () => {
-        fetch('http://localhost:5000/api/get-reports')
+        fetch('http://localhost:5000/api/get-reports', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(data => {
                 if (Array.isArray(data)) {
                     setReports(data);
+                } else {
+                    setReports([]);
                 }
             })
-            .catch(err => console.error("Error fetching reports:", err));
+            .catch(err => {
+                console.error("Error fetching reports:", err);
+                setReports([]);
+            });
     };
 
-    // 💡 PDF එක බ්‍රව්සර් එකේ වෙනම Tab එකක Open කිරීමේ ශ්‍රිතය (Sales / Profit වර්ගය හඳුනාගෙන ක්‍රියා කරයි)
-    const handleOpenReport = (reportId, reportName) => {
+    // Open the PDF in a separate tab
+    const handleOpenReport = async (reportId, reportName) => {
         const isProfit = reportName && reportName.toLowerCase().includes('profit');
         const fileName = isProfit ? `${reportId}_Profit_Report.pdf` : `${reportId}_Sales_Report.pdf`;
+        const reportUrl = `http://localhost:5000/api/report/${fileName}`;
         
-        const reportUrl = `http://localhost:5000/report/${fileName}`;
-        window.open(reportUrl, '_blank');
+        try {
+            const response = await fetch(reportUrl, {
+                headers: getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                alert("Access Denied or File Not Found!");
+                return;
+            }
+
+            const blob = await response.blob();
+            const fileURL = URL.createObjectURL(blob);
+            window.open(fileURL, '_blank');
+        } catch (error) {
+            console.error("Error opening report secure window:", error);
+            alert("An error occurred while opening the report.");
+        }
     };
 
-    // 💡 Report එක Delete කිරීමේ ශ්‍රිතය
+    // Delete the report
     const handleDeleteReport = (reportId) => {
         if (window.confirm(`Are you sure you want to delete ${reportId}?`)) {
             fetch(`http://localhost:5000/api/delete-report/${reportId}`, {
-                method: 'DELETE'
+                method: 'DELETE',
+                headers: getAuthHeaders()
             })
             .then(res => res.json())
             .then(data => {
                 alert(data.message || "Report deleted successfully");
-                fetchReports(); // වගුව යාවත්කාලීන කිරීම
+                fetchReports(); 
             })
             .catch(err => console.error("Error deleting report:", err));
         }
     };
 
-    // Invoice Table එකේ තියෙන අවුරුදු (Years) ලබාගැනීම
+    // Fetch invoice years
     const fetchInvoiceYears = () => {
-        fetch('http://localhost:5000/api/get-invoice-years')
+        fetch('http://localhost:5000/api/get-invoice-years', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(years => {
                 if (Array.isArray(years) && years.length > 0) {
@@ -80,13 +122,17 @@ function Report() {
         fetchReports();
     }, []);
 
-    // 💡 Sales හෝ Profit රිපෝට් එක සාදන ශ්‍රිතය
+    // Reset the page to 1 when searching
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [searchTerm]);
+
+    // Function for generating sales/profit reports
     const handleCreateReport = () => {
         const monthMap = { Jan:'01', Feb:'02', Mar:'03', Apr:'04', May:'05', Jun:'06', Jul:'07', Aug:'08', Sep:'09', Oct:'10', Nov:'11', Dec:'12' };
         const formattedFromDate = `${fromYear}-${monthMap[fromMonth]}-${fromDate}`;
         const formattedToDate = `${toYear}-${monthMap[toMonth]}-${toDate}`;
 
-        // 🔍 තෝරාගත් Report Type එක අනුව URL එක සහ File Name එක තීරණය කිරීම
         let apiUrl = 'http://localhost:5000/api/generate-sales-report';
         let fileName = `${nextReportID}_Sales_Report.pdf`;
 
@@ -95,9 +141,11 @@ function Report() {
             fileName = `${nextReportID}_Profit_Report.pdf`;
         }
 
+        setIsGenerating(true);
+
         fetch(apiUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
             body: JSON.stringify({
                 ReportID: nextReportID,
                 ReportType: reportType,
@@ -112,30 +160,51 @@ function Report() {
             return res.blob();
         })
         .then(blob => {
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
+            setTimeout(() => {
+                setIsGenerating(false);
 
-            setTimeout(() => { fetchReports(); }, 500);
-            setIsAddReportOpen(false);
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+
+                fetchReports();
+                setIsAddReportOpen(false);
+            }, 1000);
         })
         .catch(err => {
+            setIsGenerating(false);
             console.error("Error creating report:", err);
             alert(err.message || "Something went wrong!");
         });
     };
 
-    const filteredReports = reports.filter(rep =>
-        rep.ReportID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        rep.ReportName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    // Filtering & Pagination Logic
+    const filteredReports = Array.isArray(reports) 
+        ? reports.filter(rep =>
+            rep.ReportID?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            rep.ReportName?.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : [];
+
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredReports.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(filteredReports.length / itemsPerPage);
+
+    const handlePageChange = (pageNumber) => {
+        if (pageNumber >= 1 && pageNumber <= totalPages) {
+            setCurrentPage(pageNumber);
+        }
+    };
 
     const handleOpenAddReport = () => {
-        fetch('http://localhost:5000/api/next-report-id')
+        fetch('http://localhost:5000/api/next-report-id', {
+            headers: getAuthHeaders()
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.nextReportId) {
@@ -151,6 +220,23 @@ function Report() {
 
     return (
         <div className="main-layout" style={{ backgroundImage: `url(${bgImage})` }}>
+            
+            {/* FULL WINDOW DARK BLUR GENERATING REPORT LOADER */}
+            {isGenerating && (
+                <div style={{
+                    position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
+                    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+                    backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)',
+                    display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center',
+                    zIndex: 999999
+                }}>
+                    <div className="modern-report-spinner"></div>
+                    <div className="loader-report-text">
+                        GENERATING REPORT...
+                    </div>
+                </div>
+            )}
+
             <Sidebar />
             <div className="content-area">
                 <Header />
@@ -163,7 +249,7 @@ function Report() {
                         <div className="search-container">
                             <input 
                                 type="text" 
-                                placeholder="Search Report ID..." 
+                                placeholder="Search Report ID or Name..." 
                                 className="search-input"
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -176,49 +262,72 @@ function Report() {
                         </div>
                     </div>
 
-                    <table className="modern-table">
-                        <thead>
-                            <tr>
-                                <th>Report ID</th>
-                                <th>Report Name</th>
-                                <th>Date</th>
-                                <th>Time</th>
-                                <th style={{ textAlign: 'center' }}>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {filteredReports.length === 0 ? (
+                    <div className="report-table-wrapper">
+                        <table className="modern-table">
+                            <thead>
                                 <tr>
-                                    <td colSpan="5" style={{ textAlign: 'center', color: '#999', padding: '30px' }}>
-                                        No reports found
-                                    </td>
+                                    <th>Report ID</th>
+                                    <th>Report Name</th>
+                                    <th>Date</th>
+                                    <th>Time</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ) : (
-                                filteredReports.map((rep, index) => (
-                                    <tr key={index}>
-                                        <td style={{ fontWeight: 'bold' }}>{rep.ReportID}</td>
-                                        <td>{rep.ReportName}</td>
-                                        <td>{rep.Date}</td>
-                                        <td>{rep.Time}</td>
-                                        <td>
-                                            <button 
-                                                className="report-open-btn" 
-                                                onClick={() => handleOpenReport(rep.ReportID, rep.ReportName)}
-                                            >
-                                                Open
-                                            </button>
-                                            <button 
-                                                className="report-delete-btn" 
-                                                onClick={() => handleDeleteReport(rep.ReportID)}
-                                            >
-                                                Delete
-                                            </button>
+                            </thead>
+                            <tbody>
+                                {currentItems.length === 0 ? (
+                                    <tr>
+                                        <td colSpan="5" style={{ textAlign: 'center', color: '#999', padding: '30px' }}>
+                                            No reports found
                                         </td>
                                     </tr>
-                                ))
-                            )}
-                        </tbody>
-                    </table>
+                                ) : (
+                                    currentItems.map((rep, index) => (
+                                        <tr key={index}>
+                                            <td style={{ fontWeight: 'bold' }}>{rep.ReportID}</td>
+                                            <td>{rep.ReportName}</td>
+                                            <td>{rep.Date}</td>
+                                            <td>{rep.Time}</td>
+                                            <td>
+                                                <div className="action-buttons-wrapper">
+                                                    <button 
+                                                        className="report-open-btn" 
+                                                        onClick={() => handleOpenReport(rep.ReportID, rep.ReportName)}
+                                                    >
+                                                        Open
+                                                    </button>
+                                                    <button 
+                                                        className="report-delete-btn" 
+                                                        onClick={() => handleDeleteReport(rep.ReportID)}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* 📄 Pagination Controls */}
+                    {totalPages > 1 && (
+                        <div className="pagination-wrapper">
+                            <button className="pagination-btn" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
+                                ◀ Prev
+                            </button>
+                            <div className="pagination-numbers">
+                                {Array.from({ length: totalPages }, (_, i) => i + 1).map((number) => (
+                                    <button key={number} className={`page-number-btn ${currentPage === number ? 'active' : ''}`} onClick={() => handlePageChange(number)}>
+                                        {number}
+                                    </button>
+                                ))}
+                            </div>
+                            <button className="pagination-btn" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>
+                                Next ▶
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Create Report Sidebar Overlay */}
@@ -274,8 +383,8 @@ function Report() {
                         </div>
 
                         <div className="form-buttons">
-                            <button className="add-btn" onClick={handleCreateReport}>Create</button>
-                            <button className="cancel-btn" onClick={() => setIsAddReportOpen(false)}>Cancel</button>
+                            <button className="add-btn" onClick={handleCreateReport} disabled={isGenerating}>Create</button>
+                            <button className="cancel-btn" onClick={() => setIsAddReportOpen(false)} disabled={isGenerating}>Cancel</button>
                         </div>
                     </div>
                 </div>

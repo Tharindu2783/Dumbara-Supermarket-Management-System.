@@ -3,13 +3,13 @@ const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-// 💡 කුමන ෆෝල්ඩරයක සිටියත් නිවැරදිව ප්‍රධාන backend ෆෝල්ඩරයේ ඇති app.db එක සොයා ගැනීමට path.join භාවිතා කරමු
+// 💡 Use path.join to correctly locate the main backend app.db regardless of the folder
 const dbPath = path.join(__dirname, '../app.db');
 const db = new sqlite3.Database(dbPath);
 
-// GET API - Invoice වගුවෙන් Unique අවුරුදු ලබා ගැනීම
+// GET API - Retrieve unique years from the Invoice table
 router.get('/get-invoice-years', (req, res) => {
-    // 💡 SQLite වල substr(Date, 1, 4) මඟින් "2026-05-25" වැනි දිනයකින් "2026" කොටස වෙන් කරගනී
+    // 💡 In SQLite, substr(Date, 1, 4) extracts the year part from a date like "2026-05-25"
     const query = `
         SELECT DISTINCT substr(Date, 1, 4) AS Year 
         FROM Invoice 
@@ -23,13 +23,13 @@ router.get('/get-invoice-years', (req, res) => {
             return res.status(500).json({ error: err.message });
         }
         
-        // ලැබෙන rows වලින් ['2026'] වැනි සරල Array එකක් සකසා ගැනීම
+        // Create a simple array like ['2026'] from the returned rows
         const years = rows.map(row => row.Year);
         
-        // පරීක්ෂා කිරීම සඳහා backend console එකේ print කර බලමු
+        // Print to the backend console for verification
         console.log("Fetched Years from DB:", years);
         
-        // කිසිම Invoice එකක් නැත්නම්, දැනට පවතින වර්ෂය Default එකක් ලෙස යැවීම
+        // If there are no invoices, use the current year as the default
         if (years.length === 0) {
             years.push(new Date().getFullYear().toString());
         }

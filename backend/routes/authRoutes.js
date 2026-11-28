@@ -3,10 +3,10 @@ const router = express.Router();
 const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
-const dbPath = path.join(__dirname, '../../backend/app.db'); // 💡 image_d9f41c.png එකේ තියෙන app.db එකට path එක
+const dbPath = path.join(__dirname, '../../backend/app.db'); // 💡 Path to the app.db file referenced in the screenshot
 const db = new sqlite3.Database(dbPath);
 
-// 🔐 පරිශීලකයන් ලැයිස්තුව Select එකට ලබා ගැනීමට (දැනටමත් ඔයා පාවිච්චි කරන එක)
+// 🔐 Retrieve the list of users for the select dropdown
 router.get('/users', (req, res) => {
     db.all("SELECT UserName FROM user", [], (err, rows) => {
         if (err) return res.status(500).json({ error: err.message });
@@ -14,11 +14,11 @@ router.get('/users', (req, res) => {
     });
 });
 
-// 🔑 ඩේටාබේස් එක හරහා Username සහ Password චෙක් කරන ප්‍රධාන API එක
+// 🔑 Main API to verify username and password against the database
 router.post('/login', (req, res) => {
     const { username, password } = req.body;
 
-    // image_d9f41c.png එකේ තියෙන Column නම් වලට අනුවම Query එක ලියා ඇත
+    // Write the query according to the column names shown in the screenshot
     const query = `SELECT * FROM user WHERE UserName = ? AND password = ?`;
     
     db.get(query, [username, password], (err, row) => {
@@ -27,10 +27,10 @@ router.post('/login', (req, res) => {
         }
         
         if (row) {
-            // නිවැරදි නම් සාර්ථකයි කියලා දන්වනවා
+            // If correct, report success
             res.json({ success: true, message: "Login successful", user: row.UserName });
         } else {
-            // වැරදි නම් 401 Error එකක් දෙනවා
+            // If incorrect, return a 401 error
             res.status(401).json({ success: false, message: "Invalid username or password!" });
         }
     });

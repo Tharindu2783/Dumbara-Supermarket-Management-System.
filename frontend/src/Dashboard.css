@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Dashboard.css - COMPLETELY ISOLATED STYLES (Prefix: db-)
+   Dashboard.css - PERFECT DESKTOP & MOBILE RESPONSIVE
    ========================================================================== */
 
 @keyframes db-fadeInRight {
@@ -24,43 +24,43 @@
     background-position: center;
     background-attachment: fixed;
     width: 100%;
+    overflow-x: hidden;
 }
 
 .db-content-area {
     flex: 1;
-    margin-left: 260px; 
-    padding: 30px;
+    margin-left: 260px; /* Desktop Sidebar Space */
+    padding: 25px;
     display: flex;
     flex-direction: column;
     align-items: center; 
     justify-content: flex-start;
     overflow-x: hidden;
+    box-sizing: border-box;
+    width: calc(100% - 260px);
 }
 
-.db-user-icon {
-    width: 40px;
-    height: 40px;
-    background: #ffffffaa;
-    border-radius: 50%;
-    border: 1px solid white;
-}
-
+/* 💻 DESKTOP STATS CONTAINER (4 cards in one row) */
 .db-stats-container {
     display: flex;
+    flex-direction: row; /* 💻 Place them in a single row on desktop */
     justify-content: space-between; 
     gap: 15px;
-    margin-bottom: 30px;
-    width: 95%;
+    margin-bottom: 25px;
+    width: 100%;
     max-width: 1200px;
+    box-sizing: border-box;
 }
 
+/* 💻 DESKTOP STAT CARDS */
 .db-glass-stat-card {
     background: rgba(255, 255, 255, 0.83); 
     backdrop-filter: blur(12px);
     border-radius: 22px;
     padding: 20px 15px;
-    flex: 1;
-    min-height: 140px;
+    flex: 1; /* 💻 Divide evenly */
+    min-width: 0; /* Prevent flexbox overflow */
+    min-height: 120px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
     text-align: center;
     display: flex;
@@ -68,20 +68,18 @@
     align-items: center;
     justify-content: center;
     border: 1px solid rgba(255, 255, 255, 0.4);
+    box-sizing: border-box;
 }
 
-/* 🎯 FIXED: නිකන්ම h3 ලියනවා වෙනුවට class එකක් පමණක් සිලෙක්ට් කර ඇත */
 .db-glass-stat-card-title {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: #333;
     font-weight: 600;
-    margin: 0 0 10px 0;
+    margin: 0 0 8px 0;
 }
 
-/* 🎯 FIXED: !important සියල්ල ඉවත් කර ඇත */
-/* 🎯 Dashboard එකට විතරක් අයිති Unique Class එකක් */
 .db-only-total-number {
-    font-size: 1.8rem; /* ඩෑෂ්බෝඩ් එකේ ඔයාට ඕන සයිස් එක මෙතනින් හදන්න */
+    font-size: 2rem; 
     font-weight: 800;
     margin: 0;    
     line-height: 1.2;
@@ -95,24 +93,25 @@
 .db-table-glass-container {
     background: rgba(255, 255, 255, 0.83); 
     backdrop-filter: blur(12px);
-    border-radius: 28px;
+    border-radius: 24px;
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
-    width: 95%;
+    width: 100%;
     max-width: 1200px;
-    margin-bottom: 40px;
+    margin-bottom: 25px;
     border: 1px solid rgba(255, 255, 255, 0.4);
     box-sizing: border-box;
+    padding: 20px;
 }
 
 .db-table-top-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .db-title-section {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
     font-weight: 700;
     color: #2c3e50;
 }
@@ -120,48 +119,41 @@
 .db-graph-wrapper {
     width: 100%;
     margin-top: 5px;
+    overflow: hidden;
 }
 
 /* --- Dashboard AI Chatbot CSS Styles --- */
 .db-ai-assistant-wrapper {
     position: fixed;
-    bottom: 25px;
-    right: 25px;
+    bottom: 20px;
+    right: 20px;
     z-index: 10000;
     font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .db-ai-float-btn {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     border: none;
-    font-size: 26px;
+    font-size: 22px;
     cursor: pointer;
     box-shadow: 0 8px 24px rgba(0, 123, 255, 0.3);
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.db-ai-float-btn:hover {
-    transform: scale(1.08);
-}
-
-.db-ai-float-btn.db-chat-active {
-    background: #dc3545;
-    box-shadow: 0 8px 24px rgba(220, 53, 69, 0.3);
-}
-
 .db-ai-chat-window {
     position: absolute;
-    bottom: 75px;
+    bottom: 65px;
     right: 0;
-    width: 380px;
-    height: 480px;
+    width: 320px;
+    max-width: calc(100vw - 30px);
+    height: 420px;
+    max-height: 70vh;
     border-radius: 14px;
     display: flex;
     flex-direction: column;
@@ -173,101 +165,49 @@
 
 .db-ai-chat-header {
     background: linear-gradient(135deg, #1e3c72, #2a5298);
-    padding: 14px 18px;
+    padding: 10px 14px;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     color: white;
-}
-
-.db-ai-avatar {
-    font-size: 20px;
-    background: rgba(255, 255, 255, 0.2);
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.db-ai-chat-header h4 {
-    margin: 0;
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.db-online-dot {
-    font-size: 11px;
-    color: #2ecc71;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-}
-
-.db-online-dot::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    background: #2ecc71;
-    border-radius: 50%;
-    display: inline-block;
 }
 
 .db-ai-chat-messages {
     flex: 1;
-    padding: 15px;
+    padding: 10px;
     overflow-y: auto;
     background: #f8fafc;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
 }
 
-.db-ai-msg-row {
-    display: flex;
-    width: 100%;
-}
-
+.db-ai-msg-row { display: flex; width: 100%; }
 .db-bot-row { justify-content: flex-start; }
 .db-user-row { justify-content: flex-end; }
 
 .db-ai-message-bubble {
-    max-width: 80%;
-    padding: 10px 14px;
+    max-width: 85%;
+    padding: 8px 12px;
     border-radius: 12px;
-    font-size: 13.5px;
-    line-height: 1.5;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.db-bot-row .db-ai-message-bubble {
-    background: white;
-    color: #334155;
-    border: 1px solid #e2e8f0;
-    border-top-left-radius: 2px;
-}
-
-.db-user-row .db-ai-message-bubble {
-    background: #2a5298;
-    color: white;
-    border-top-right-radius: 2px;
+    font-size: 12.5px;
+    line-height: 1.4;
 }
 
 .db-ai-chat-input-area {
-    padding: 12px;
+    padding: 8px;
     background: white;
     display: flex;
-    gap: 8px;
+    gap: 6px;
     border-top: 1px solid #e2e8f0;
 }
 
 .db-ai-chat-input-area input {
     flex: 1;
-    padding: 10px 14px;
+    padding: 8px 12px;
     border-radius: 20px;
     border: 1px solid #cbd5e1;
-    font-size: 13.5px;
+    font-size: 13px;
     outline: none;
 }
 
@@ -275,38 +215,36 @@
     background: #2a5298;
     color: white;
     border: none;
-    padding: 0 16px;
+    padding: 0 12px;
     border-radius: 20px;
     cursor: pointer;
     font-weight: 600;
-    font-size: 13px;
-    transition: background 0.2s;
+    font-size: 12px;
 }
 
-.db-ai-chat-input-area button:hover { background: #1e3c72; }
-.db-ai-chat-input-area button:disabled { background: #94a3b8; cursor: not-allowed; }
+/* ==========================================================================
+   📱 MOBILE & TABLET MEDIA QUERIES 
+   ========================================================================== */
+@media screen and (max-width: 1024px) {
+    .db-content-area {
+        margin-left: 0 !important; 
+        width: 100% !important;
+        padding: 15px !important;
+        padding-top: 65px !important;
+    }
 
-.db-typing-indicator span {
-    height: 6px;
-    width: 6px;
-    background: #94a3b8;
-    display: inline-block;
-    border-radius: 50%;
-    margin-right: 4px;
-    animation: dbBounce 1.3s infinite;
-}
-.db-typing-indicator span:nth-child(2) { animation-delay: 0.15s; }
-.db-typing-indicator span:nth-child(3) { animation-delay: 0.3s; }
+    /* 📱 On mobile only, the stat cards stack vertically one below the other */
+    .db-stats-container {
+        flex-direction: column !important; 
+        gap: 12px !important;
+    }
 
-@keyframes dbBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
-}
+    .db-glass-stat-card {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
 
-.db-animate-popup {
-    animation: dbPopup 0.25s ease-out;
-}
-@keyframes dbPopup {
-    from { opacity: 0; transform: translateY(15px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    .db-table-glass-container {
+        padding: 12px !important;
+    }
 }

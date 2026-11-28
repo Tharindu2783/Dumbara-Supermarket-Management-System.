@@ -1,6 +1,7 @@
 /* ==========================================================================
-   🎬 ANIMATIONS & MAIN LAYOUT
+   Orders.css - DESKTOP AUTO FIT & MOBILE/TAB RESPONSIVE
    ========================================================================== */
+
 @keyframes fadeInRight {
     from {
         opacity: 0;
@@ -16,29 +17,43 @@
     animation: fadeInRight 0.2s ease-out forwards; 
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #2c3e50;
+    overflow-x: hidden;
+    width: 100%;
+}
+
 .main-layout {
     display: flex;
     min-height: 100vh;
+    min-height: 100dvh;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .content-area {
     flex: 1;
-    margin-left: 260px; /* වම් පැත්තේ Navigation Sidebar එක සඳහා ඉඩ */
-    padding: 30px;
+    margin-left: 260px; 
+    padding: 25px;
     display: flex;
     flex-direction: column;
     align-items: center; 
     justify-content: flex-start;
-    overflow-x: hidden;
+    box-sizing: border-box;
+    width: calc(100% - 260px);
+    max-width: calc(100% - 260px);
+    min-width: 0;
 }
 
-/* 👤 TOP ROW (HEADER INFO) */
+/* 👤 TOP ROW */
 .top-row {
-    width: 95%; 
+    width: 100%; 
     max-width: 1200px;
     display: flex;
     justify-content: flex-end;
@@ -60,87 +75,89 @@
     border: 1px solid white;
 }
 
-
 /* ==========================================================================
-   📊 STATS CARDS (image_e4eed2.png එකේ ආකාරයට කොටු හැඩැති කාඩ්පත් 2)
+   📊 STATS CARDS
    ========================================================================== */
 .stats-container {
     display: flex;
-    justify-content: flex-start; /* කාඩ්පත් වම් පැත්තට පෙළගැස්වීම */
-    gap: 25px;
-    margin-bottom: 30px;
-    width: 95%;
-    max-width: 1200px;
-}
-
-.glass-stat-card {
-    background: rgba(255, 255, 255, 0.9); 
-    backdrop-filter: blur(12px);
-    border-radius: 20px;
-    padding: 25px;
-    width: 250px; 
-    min-height: 180px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    text-align: left; 
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
+    justify-content: space-between; 
     gap: 15px;
+    margin-bottom: 25px;
+    width: 100%;
+    max-width: 1200px;
     box-sizing: border-box;
 }
 
+.glass-stat-card {
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 22px;
+    padding: 20px;
+    flex: 1;
+    min-width: 0; 
+    height: 185px; 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    text-align: left; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
 .glass-stat-card h3 {
-    font-size: 1.2rem;
+    font-size: 1.05rem;
     color: #333;
     font-weight: 600;
     margin: 0;
 }
 
-
-
-/* සංඛ්‍යා සහ මුදල් වල වර්ණ */
 .total-number-special {
-    font-size: 7rem; /* අංකයේ ප්‍රමාණය වැඩි කරන ලදි */
-    color: #2ecc71;    /* ඔබගේ පින්තූරයේ ඇති කොළ පැහැය */
+    font-size: 4.5rem; 
+    color: #2ecc71;    
     font-weight: 800;
-    margin: auto 0;    /* අංකය කාඩ්පතේ මැදට ගැනීමට */
-    line-height: 0;
+    margin: 0;    
+    line-height: 1;
 }
-
-.pending-color { 
-    color: #333; /* රූපයේ ඇති පරිදි කළු/තද පැහැය */
-} 
 
 .expense-color { 
-        color: #2ecc71;    /* ඔබගේ පින්තූරයේ ඇති කොළ පැහැය */
+    color: #2ecc71;    
     font-weight: 800;
-    font-size: 3rem; 
+    font-size: 2.3rem; 
+    margin: 0;
+    word-break: break-all;
 }
-
 
 /* ==========================================================================
    🔲 ORDERS TABLE CONTAINER & SEARCH BAR
    ========================================================================== */
 .table-glass-container {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
-    border-radius: 35px;
-    padding: 30px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
-    width: 95%;
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 100%;
     max-width: 1200px;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
+    box-sizing: border-box;
 }
 
 .table-top-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .title-section {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -157,13 +174,12 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     cursor: pointer;
     line-height: 1; 
-    padding-bottom: 4px;
+    box-sizing: border-box;
 }
 
-/* 🔍 Modern Search Container */
 .search-container {
     display: flex;
     align-items: center;
@@ -171,9 +187,10 @@
     border: 1.5px solid #2ecc71; 
     border-radius: 30px; 
     padding-left: 15px;
-    width: 300px;
+    width: 280px;
     height: 40px;
     overflow: hidden; 
+    box-sizing: border-box;
 }
 
 .search-input {
@@ -182,25 +199,15 @@
     flex: 1;
     font-size: 14px;
     color: #333;
+    background: transparent;
 }
 
-.search-btn-modern {
-    background-color: #2ecc71; 
-    border: none;
-    height: 100%;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.3s ease;
+/* 📊 Table Architecture */
+.orders-table-wrapper {
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.search-btn-modern:hover { 
-    background-color: #27ae60; 
-}
-
-/* 📊 Modern Table Styles */
 .modern-table {
     width: 100%;
     border-collapse: collapse;
@@ -208,134 +215,182 @@
 
 .modern-table th {
     text-align: left;
-    padding: 15px;
-    color: #888;
-    font-weight: 600;
-    border-bottom: 1px solid #eee;
-    font-size: 0.95rem;
-}
-
-.modern-table td {
-    padding: 15px;
-    border-bottom: 1px solid #f8f8f8;
-    color: #444;
+    padding: 12px 10px;
+    color: #666;
+    font-weight: 700;
+    border-bottom: 2px solid #eee;
     font-size: 0.9rem;
 }
 
-/* 🏷️ Status Badges (Pending, Approved, Cancelled) */
+.modern-table td {
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #444;
+    font-size: 0.88rem;
+}
+
 .status-badge {
     padding: 5px 12px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: bold;
     text-transform: uppercase;
     display: inline-block;
+    white-space: nowrap;
 }
 
-.status-badge.pending { background: #ffeaa7; color: #d63031; }
-.status-badge.approved { background: #badc58; color: #6ab04c; }
-.status-badge.cancelled { background: #ff7675; color: #d63031; }
+.status-badge.pending, .status-badge.approval-pending { background: #ffeaa7; color: #d63031; }
+.status-badge.approved { background-color: #3498db !important; color: white; }
+.status-badge.received { background-color: #2ecc71 !important; color: white; }
+.status-badge.cancel, .status-badge.canceled { background-color: #e74c3c !important; color: white; }
 
-/* Action Buttons (Edit / Delete) */
+.action-buttons-flex {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+}
+
 .edit-btn-small {
-    background-color: #28a745;
+    background-color: #27ae60;
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 6px;
     cursor: pointer;
-    margin-right: 5px;
+    transition: background 0.2s ease;
 }
 
-.delete-btn-small {
-    background-color: #dc3545;
-    color: white;
-    border: none;
+.edit-btn-small:hover:not(:disabled) { background-color: #219150; }
+.edit-btn-small:disabled { background-color: #cccccc; cursor: not-allowed; }
+
+/* 🟢 ACTION DROPDOWN - Glass White Background Restored */
+.action-dropdown {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
     padding: 5px 10px;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    color: #333333 !important;
+    font-weight: 500;
     cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
 }
 
-.edit-btn-small:hover { background-color: #218838; }
-.delete-btn-small:hover { background-color: #c82333; }
+.action-dropdown:hover:not(:disabled) {
+    background: #ffffff !important;
+    border-color: #2ecc71 !important;
+}
 
+.action-dropdown:disabled {
+    background: rgba(0, 0, 0, 0.05) !important;
+    color: #888888 !important;
+    cursor: not-allowed;
+    border-color: transparent !important;
+}
 
 /* ==========================================================================
-   🟩 RIGHT SIDE SLIDING FORM SIDEBAR (image_e4eed2.png නවතම පෙනුම)
+   📄 PAGINATION STYLES
    ========================================================================== */
-/* මුළු Screen එකම වහන පසුබිම */
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.pagination-numbers { display: flex; gap: 5px; }
+
+.pagination-btn, .page-number-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12.5px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2c3e50;
+}
+
+.pagination-btn:hover:not(:disabled), .page-number-btn:hover, .page-number-btn.active {
+    background: #2ecc71;
+    color: white;
+}
+
+.pagination-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   🟩 RIGHT SIDE SLIDING FORM SIDEBAR (White Text Restored)
+   ========================================================================== */
 .add-product-overlay {
     position: fixed;
     top: 0;
-    right: -100%; /* මුලින් දකුණු පැත්තේ සැඟවී පවතී */
+    right: -100%; 
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.2); 
+    background: rgba(0, 0, 0, 0.3); 
     display: flex;
     justify-content: flex-end;
     transition: right 0.4s ease-in-out;
     z-index: 2000;
 }
 
-/* Sidebar එක දිගහැරුණු පසු (Open State) */
-.add-product-overlay.open {
-    right: 0; 
-}
+.add-product-overlay.open { right: 0; }
 
-/* දකුණු පස ඇති කොළ පැහැති Sidebar එක */
 .add-product-sidebar {
     width: 380px;
-    height: 100vh;
-    background: #1ea05a; /* image_e4eed2.png එකේ තියෙන තද කොළ පැහැය */
-    padding: 40px 30px;
+    max-width: 100%;
+    height: 100%;
+    background: rgba(30, 160, 90, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    padding: 25px;
     color: white;
-    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
     overflow-y: auto; 
-    border-top-left-radius: 40px; /* වක්‍ර වූ වම පැත්තේ කොන් දෙක */
-    border-bottom-left-radius: 40px;
     box-sizing: border-box;
 }
 
-/* Form එකේ ප්‍රධාන ශීර්ෂය (Orders Title) */
-.sidebar-form-header h2 {
-    font-size: 2.2rem;
-    font-weight: bold;
+.add-product-sidebar h2 {
     text-align: center;
-    margin-top: 10px;
-    margin-bottom: 40px;
-    font-family: 'Segoe UI', sans-serif;
-    letter-spacing: 0.5px;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+    font-weight: bold;
 }
 
-/* Input Fields වල Groups */
-.form-group {
-    margin-bottom: 20px;
-}
+.form-group { margin-bottom: 15px; }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 0.9rem;
     color: white;
 }
 
-/* ⚪ Fully Rounded Input & Select Boxes (සුදු බෝඩරය සහිත) */
+/* ⚪ SideBar Inputs Clear White Text Fix */
 .form-input-rounded {
     width: 100%;
-    padding: 12px 20px;
-    border-radius: 30px; /* රූපයේ ඇති පරිදි සම්පූර්ණයෙන්ම වටකුරු හැඩය */
-    border: 2px solid white; /* සුදු පැහැති බෝඩරය */
+    padding: 10px 15px;
+    border-radius: 20px; 
+    border: 1.5px solid white !important; 
     background: transparent;
-    color: white;
-    font-size: 1rem;
+    color: #ffffff !important;
+    font-size: 0.95rem;
     outline: none;
     box-sizing: border-box;
-    transition: all 0.3s ease;
 }
 
-.form-input-rounded:focus {
-    background: rgba(255, 255, 255, 0.1);
+.form-input-rounded::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .form-input-rounded option {
@@ -343,81 +398,276 @@
     background: white;
 }
 
-/* Buttons Container */
+.orders-qty-wrapper {
+    display: flex !important;
+    gap: 10px !important;
+    width: 100% !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    box-sizing: border-box !important;
+}
+
+.qty-flex-input {
+    flex: 1 !important;
+    width: 100% !important;
+}
+
+.orders-unit-select {
+    width: 80px !important;
+    height: 42px !important; 
+    border-radius: 20px !important; 
+    border: 1.5px solid white !important; 
+    background: rgba(255, 255, 255, 0.15) !important; 
+    color: #ffffff !important; 
+    font-size: 0.9rem !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    outline: none !important;
+    cursor: pointer !important;
+    box-sizing: border-box !important;
+}
+
+.orders-unit-select option {
+    color: #333333 !important;
+    background: #ffffff !important;
+}
+
 .form-buttons-modern {
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    margin-top: 40px;
+    gap: 10px;
+    margin-top: 25px;
     align-items: center;
 }
 
-/* 💎 Send For Approval & Cancel Buttons (රූපයේ ඇති ලස්සන Glow/Neon ලා කොළ පැහැය) */
 .send-approval-btn, .cancel-btn-modern {
-    width: 90%;
-    padding: 14px;
-    border-radius: 15px; /* තරමක් වටකුරු කොන් */
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px; 
     border: none;
     font-weight: bold;
-    font-size: 1.15rem;
+    font-size: 1rem;
     cursor: pointer;
     text-align: center;
-    box-shadow: 0 4px 20px rgba(46, 204, 113, 0.4); /* Neon Glow එකක් දීමට */
     transition: all 0.2s ease;
-    background: #2ecc71; /* රූපයේ ඇති ලස්සන ලා කොළ/Cyan මිශ්‍ර වර්ණය */
+    background: #2ecc71; 
     color: white;
 }
 
-.send-approval-btn:hover, .cancel-btn-modern:hover {
-    transform: scale(1.03);
-    filter: brightness(1.15); /* Hover කරද්දී ලස්සනට Highlight වේ */
+.cancel-btn-modern {
+    background: rgba(255, 255, 255, 0.25);
 }
 
-/* Approval Pending Badge එක කහ හෝ තැඹිලි පැහැයෙන් ලස්සනට පෙන්වීමට */
-.status-badge.approval-pending { 
-    background: #ffeaa7; 
-    color: #e67e22; 
-}
-
-/* Action Dropdown එක සඳහා ලස්සන CSS හැඩතල */
-.action-dropdown {
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 0.9rem;
-    color: #333;
-    font-weight: 500;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-.action-dropdown:hover:not(:disabled) {
+.orders-search-dropdown {
+    position: absolute;
+    top: 105%;
+    left: 0;
+    width: 100%;
     background: #ffffff;
-    border-color: #2ecc71;
-    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.2);
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    list-style: none;
+    padding: 6px 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 2500;
 }
 
-.action-dropdown:disabled {
-    background: rgba(0, 0, 0, 0.05);
-    color: #888;
-    cursor: not-allowed;
-    border-color: transparent;
+.orders-dropdown-item {
+    padding: 10px 15px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
-/* Status Badges වලට අලුත් පාටවල් (Approved / Received) */
-.status-badge.approved {
-    background-color: #3498db !important; /* නිල් පාට */
-    color: white;
+.ord-prod-name-main {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 0.9rem;
 }
 
-.status-badge.received {
-    background-color: #2ecc71 !important; /* කොළ පාට */
-    color: white;
+.orders-dropdown-item:hover {
+    background-color: #1ea05a;
 }
 
-.status-badge.cancel {
-    background-color: #e74c3c !important; /* රතු පාට */
-    color: white;
+.orders-dropdown-item:hover .ord-prod-name-main {
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   🟢 EDIT MODAL POPUP INPUT FIX (CSS ONLY)
+   ========================================================================== */
+.orders-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.orders-modal-content {
+    background: #ffffff !important;
+    padding: 25px;
+    border-radius: 20px;
+    width: 400px;
+    max-width: 100%;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    animation: fadeInRight 0.2s ease-out forwards;
+    box-sizing: border-box;
+}
+
+/* 🎯 Modal එක ඇතුලේ ඇති Input සහ Labels වල පාටවල් නිවැරදි කිරීම */
+.orders-modal-content label {
+    color: #2c3e50 !important;
+    font-weight: 600 !important;
+}
+
+.orders-modal-content .form-input-rounded {
+    background-color: #f8f9fa !important;
+    color: #2c3e50 !important;
+    border: 2px solid #2ecc71 !important;
+    font-weight: bold !important;
+}
+
+.orders-modal-content .form-input-rounded::placeholder {
+    color: #95a5a6 !important;
+}
+
+.orders-modal-content h3 {
+    margin-top: 0;
+    color: #2c3e50;
+    font-size: 1.3rem;
+}
+
+.modal-buttons-flex {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    width: auto !important;
+    padding: 8px 16px !important;
+    font-size: 0.9rem !important;
+}
+
+.cancel-bg {
+    background: #95a5a6 !important;
+}
+
+.modern-login-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(46, 204, 113, 0.15);
+    border-top: 5px solid #2ecc71;
+    border-radius: 50%;
+    animation: spinLoader 0.8s linear infinite;
+}
+
+@keyframes spinLoader {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loader-login-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 14px;
+    animation: pulseText 1.5s ease-in-out infinite;
+}
+
+@keyframes pulseText {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
+
+/* ==========================================================================
+   📱 MOBILE & TABLET RESPONSIVE
+   ========================================================================== */
+@media screen and (max-width: 1024px) {
+    .content-area {
+        margin-left: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        padding: 12px !important;
+        padding-top: 65px !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    .stats-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 15px !important;
+    }
+
+    .glass-stat-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 140px !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+    }
+
+    .total-number-special {
+        font-size: 3.5rem !important;
+    }
+
+    .expense-color {
+        font-size: 2rem !important;
+    }
+
+    .table-glass-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 15px !important;
+        border-radius: 18px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .table-top-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    .search-container {
+        width: 100% !important;
+    }
+
+    .orders-table-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        display: block !important;
+    }
+
+    .modern-table {
+        min-width: 850px !important;
+    }
+
+    .modern-table th, .modern-table td {
+        white-space: nowrap !important;
+    }
+
+    .add-product-sidebar {
+        width: 100% !important;
+        padding: 20px !important;
+    }
 }

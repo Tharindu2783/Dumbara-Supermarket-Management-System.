@@ -1,4 +1,7 @@
-/* Products.css */
+/* ==========================================================================
+   Products.css
+   ========================================================================== */
+
 @keyframes fadeInRight {
     from {
         opacity: 0;
@@ -11,129 +14,133 @@
 }
 
 .fadeInRight {
-    /* මෙහි තත්පර ගණන වෙනස් කර බලන්න (උදා: 0.8s හෝ 1.5s) */
     animation: fadeInRight 0.2s ease-out forwards; 
 }
 
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #2c3e50;
+    overflow-x: hidden;
+    width: 100%;
+}
 
 .main-layout {
     display: flex;
     min-height: 100vh;
+    min-height: 100dvh;
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
 }
 
 .content-area {
     flex: 1;
-    margin-left: 260px; /* Sidebar එකට ඇති ඉඩ */
-    padding: 30px;
+    margin-left: 260px;
+    padding: 25px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* සියල්ල තිරස් අතට මැදට ගනී */
+    align-items: center; 
     justify-content: flex-start;
-    overflow-x: hidden;
+    box-sizing: border-box;
+    width: calc(100% - 260px);
+    max-width: calc(100% - 260px);
+    min-width: 0;
 }
 
-/* Header එක දකුණටම තල්ලු කර තබා ගැනීමට */
-.top-row {
-    width: 95%; /* Container එකේ පළලට ගැලපෙන්න */
-    max-width: 1200px;
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
-}
-
-.header-info {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: white;
-}
-
-.user-icon {
-    width: 40px;
-    height: 40px;
-    background: #ffffffaa;
-    border-radius: 50%;
-    border: 1px solid white;
-}
-
-/* Stats Container එක මැදට ගැනීම */
+/* ==========================================================================
+   🏆 STATS CONTAINER & CARDS
+   ========================================================================== */
 .stats-container {
     display: flex;
-    justify-content: space-between; /* Card අතර සමාන පරතරයක් තබයි */
-    gap: 20px;
-    margin-bottom: 30px;
-    width: 95%;
+    flex-direction: row;
+    justify-content: space-between; 
+    gap: 15px;
+    margin-bottom: 25px;
+    width: 100%;
     max-width: 1200px;
+    box-sizing: border-box;
 }
 
 .glass-stat-card {
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    border-radius: 25px;
-    padding: 20px;
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 22px;
+    padding: 15px;
     flex: 1;
-    min-height: 200px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    min-width: 0; 
+    height: 185px; 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     text-align: center;
-    /* Card එක ඇතුළේ දේවල් මැදට ගැනීම */
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.glass-stat-card.total-card {
     justify-content: center;
-    background: rgba(255, 255, 255, 0.8); 
-    backdrop-filter: blur(12px);
 }
 
-/* Total Products කාඩ්පත සඳහා විශේෂ Styles */
-.glass-stat-card.total-box {
-    justify-content: flex-start; 
-    padding-top: 25px;
-    /* මෙතන card එකේ background එක තියෙන නිසා h3 එකට වෙනම ඕන නෑ */
-}
-
-.glass-stat-card.total-box h3 {
-    font-size: 1.2rem;
+.glass-stat-card h3 {
+    font-size: 1.05rem;
     color: #333;
     font-weight: 600;
+    margin: 0 0 5px 0;
 }
 
-
-/* කොළ පැහැති විශාල අංකය සඳහා */
 .total-number-special {
-    font-size: 7rem; /* අංකයේ ප්‍රමාණය වැඩි කරන ලදි */
-    color: #2ecc71;    /* ඔබගේ පින්තූරයේ ඇති කොළ පැහැය */
+    font-size: 4rem; 
+    color: #2ecc71;    
     font-weight: 800;
-    margin: auto 0;    /* අංකය කාඩ්පතේ මැදට ගැනීමට */
-    line-height: 0;
+    margin: 0;    
+    line-height: 1;
 }
 
-/* Table එක ඇති Glass Container එක මැදට ගැනීම */
+.chart-container-box {
+    width: 100%;
+    height: 100px;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   📊 TABLE GLASS CONTAINER
+   ========================================================================== */
 .table-glass-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 35px;
-    padding: 30px;
-    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
-    width: 95%;
-    max-width: 1200px;
-    margin-bottom: 50px;
-    background: rgba(255, 255, 255, 0.8); 
+    background: rgba(255, 255, 255, 0.85); 
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    width: 100%;
+    max-width: 1200px;
+    margin-bottom: 25px;
+    box-sizing: border-box;
 }
 
 .table-top-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
 .title-section {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: bold;
     display: flex;
     align-items: center;
@@ -147,31 +154,42 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     cursor: pointer;
-    
-    /* පහත පේළි දෙක එකතු කරන්න */
-    line-height: 1; 
-    padding-bottom: 4px; /* මේ අගය 2px සිට 5px දක්වා වෙනස් කරමින් බලන්න */
+    line-height: 1;
+    box-sizing: border-box;
 }
 
-.manage-products-btn {
-    background: #2ecc71;
-    color: white;
+.search-container {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1.5px solid #2ecc71; 
+    border-radius: 30px; 
+    padding-left: 15px;
+    width: 280px;
+    height: 40px;
+    overflow: hidden; 
+    box-sizing: border-box;
+}
+
+.search-input {
     border: none;
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
+    outline: none;
+    flex: 1;
+    font-size: 14px;
+    color: #333;
+    background: transparent;
 }
 
-/* Table Styles */
+.prod-table-wrapper {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .modern-table {
     width: 100%;
     border-collapse: collapse;
@@ -179,192 +197,199 @@
 
 .modern-table th {
     text-align: left;
-    padding: 15px;
-    color: #888;
-    border-bottom: 1px solid #eee;
+    padding: 12px 8px;
+    color: #666;
+    font-weight: 700;
+    border-bottom: 2px solid #eee;
+    font-size: 0.88rem;
 }
 
 .modern-table td {
-    padding: 15px;
-    border-bottom: 1px solid #f8f8f8;
+    padding: 10px 8px;
+    border-bottom: 1px solid #f0f0f0;
     color: #444;
+    font-size: 0.86rem;
 }
 
+.action-buttons-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-/* Sidebar Overlay එක මුළු Screen එකම ආවරණය කරයි */
+.edit-btn-small, .delete-btn-small {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.edit-btn-small { background-color: #27ae60; color: white; }
+.delete-btn-small { background-color: #e74c3c; color: white; }
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.pagination-numbers { display: flex; gap: 5px; }
+
+.pagination-btn, .page-number-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12.5px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2c3e50;
+}
+
+.pagination-btn:hover:not(:disabled), .page-number-btn:hover, .page-number-btn.active {
+    background: #2ecc71;
+    color: white;
+}
+
 .add-product-overlay {
     position: fixed;
     top: 0;
-    right: -100%; /* මුලින් සැඟවී පවතී */
+    right: -100%;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.2); /* පසුබිම මදක් අඳුරු කරයි */
+    background: rgba(0, 0, 0, 0.3); 
     display: flex;
     justify-content: flex-end;
     transition: right 0.4s ease-in-out;
     z-index: 2000;
 }
 
-.add-product-overlay.open {
-    right: 0; /* දිග හැරුණු පසු */
-}
+.add-product-overlay.open { right: 0; }
 
-/* දකුණු පස ඇති කොළ පැහැති Sidebar එක */
 .add-product-sidebar {
     width: 350px;
+    max-width: 100%;
     height: 100%;
-    background: rgba(30, 160, 90, 0.9); /* කොළ පැහැති Glass පසුබිම */
+    background: rgba(30, 160, 90, 0.95); 
     backdrop-filter: blur(15px);
-    padding: 30px;
+    -webkit-backdrop-filter: blur(15px);
+    padding: 25px;
     color: white;
-    box-shadow: -10px 0 30px rgba(0,0,0,0.2);
-    overflow-y: auto; /* අයිතම වැඩි වූ විට scroll වීමට */
-    border-top-left-radius: 30px;
-    border-bottom-right-radius: 30px;
+    overflow-y: auto; 
+    box-sizing: border-box;
 }
 
-.add-product-sidebar h2 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 30px;
-}
-
-/* Form එකේ එක් එක් කොටස */
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 0.9rem;
-}
+.add-product-sidebar h2 { text-align: center; font-size: 1.6rem; margin-bottom: 20px; }
+.form-group { margin-bottom: 12px; }
+.form-group label { display: block; margin-bottom: 4px; font-weight: bold; font-size: 0.85rem; }
 
 .form-group input, .form-group select {
     width: 100%;
-    padding: 10px;
-    border-radius: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.8);
-    background: transparent;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(255, 255, 255, 0.8);
+    background: rgba(255, 255, 255, 0.1);
     color: white;
     outline: none;
+    box-sizing: border-box;
 }
 
-.form-group input::placeholder {
-    color: rgba(255, 255, 255, 0.7);
-}
-
-/* Buttons Styles */
-.form-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 30px;
-}
+.form-group select option { background: #11773b; color: white; }
+.form-buttons { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
 
 .add-btn, .cancel-btn {
-    padding: 12px;
-    border-radius: 15px;
+    padding: 10px;
+    border-radius: 10px;
     border: none;
     font-weight: bold;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.add-btn {
-    background: #27f0b5;
-    color: #11773b;
-}
-
-.cancel-btn {
-    background: rgba(255, 255, 255, 0.3);
-    color: white;
-}
-
-.add-btn:hover, .cancel-btn:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-}
-/* Supplier dropdown එකේ ඇති options වල අකුරු කළු කිරීම */
-.form-input option {
-    color: black !important;
-    background-color: white; /* පසුබිම සුදු පැහැති කිරීමෙන් අකුරු වඩාත් හොඳින් පෙනෙනු ඇත */
-}
-
-/* Dropdown එක තෝරාගන්නා අවස්ථාවේ (Focus) අකුරු වල වර්ණය පාලනය කිරීම */
-.form-input:focus {
-    color:white;
-}
-
-.edit-btn-small {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 5px;
-}
-
-.delete-btn-small {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
     cursor: pointer;
 }
 
-.edit-btn-small:hover { background-color: #218838; }
-.delete-btn-small:hover { background-color: #c82333; }
+.add-btn { background: #27f0b5; color: #11773b; }
+.cancel-btn { background: rgba(255, 255, 255, 0.25); color: white; }
 
-/* Search Container එකේ පෙනුම */
-.search-container {
-    display: flex;
-    align-items: center;
-    background: white;
-    border: 1.5px solid #2ecc71; /* කොළ පැහැති border එක */
-    border-radius: 30px; /* වඩාත් වටකුරු දාර */
-    padding-left: 15px;
-    width: 300px;
-    height: 40px;
-    overflow: hidden; /* බොත්තම container එක ඇතුළටම සීමා කිරීමට */
-}
+/* ==========================================================================
+   📱 MOBILE & TABLET RESPONSIVE
+   ========================================================================== */
+@media screen and (max-width: 1024px) {
+    .content-area {
+        margin-left: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+        padding: 12px !important;
+        padding-top: 65px !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
 
-/* Input field එකේ පෙනුම */
-.search-input {
-    border: none;
-    outline: none;
-    flex: 1;
-    font-size: 14px;
-    color: #333;
-}
+    .stats-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-bottom: 15px !important;
+    }
 
-/* ඔබ ඉල්ලූ නවීන Search Button එක */
-.search-btn-modern {
-    background-color: #2ecc71; /* පින්තූරයේ ඇති තද කොළ පැහැය */
-    border: none;
-    height: 100%;
-    width: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background 0.3s ease;
-}
+    .glass-stat-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 185px !important;
+        padding: 12px !important;
+        box-sizing: border-box !important;
+    }
 
-.search-btn-modern:hover {
-    background-color: #27ae60; /* බොත්තම උඩට ගිය විට පැහැය වෙනස් වීම */
-}
+    .chart-container-box {
+        height: 135px !important;
+        width: 100% !important;
+    }
 
-/* Chrome, Safari, Edge සහ Opera සඳහා Autocomplete Background එක ඉවත් කිරීම */
-.form-input:-webkit-autofill,
-.form-input:-webkit-autofill:hover, 
-.form-input:-webkit-autofill:focus, 
-.form-input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 30px #1e7e34 inset !important; /* Sidebar එකේ තද කොළ පාට */
-    -webkit-text-fill-color: white !important; /* අකුරු සුදු පාට */
-    transition: background-color 5000s ease-in-out 0s;
+    .total-number-special {
+        font-size: 3.5rem !important;
+    }
+
+    .table-glass-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 15px !important;
+        border-radius: 18px !important;
+        box-sizing: border-box !important;
+        overflow: hidden !important;
+    }
+
+    .table-top-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
+
+    .search-container {
+        width: 100% !important;
+    }
+
+    .prod-table-wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        display: block !important;
+    }
+
+    .modern-table {
+        min-width: 850px !important;
+    }
+
+    .modern-table th, .modern-table td {
+        white-space: nowrap !important;
+    }
+
+    .add-product-sidebar {
+        width: 100% !important;
+        padding: 20px !important;
+    }
 }
